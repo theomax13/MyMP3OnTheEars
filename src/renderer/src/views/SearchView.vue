@@ -1,5 +1,16 @@
 <template>
+  // Menu sidebar
+   <div class="menuBouton" >
+    <!-- Bouton burger pour ouvrir la sidebar -->
+    <button class="fixed top-4 left-4 z-1000" @click="sidebarStore.open()">
+      ☰ Menu
+    </button>
+    
+    <!-- Votre contenu existant -->
+  </div>
+
   <div class="p-6">
+    
     <h1 class="text-2xl font-bold mb-4">Recherche</h1>
 
     <!-- Barre de recherche -->
@@ -37,6 +48,8 @@
       </div>
     </div>
   </div>
+
+  
 </template>
 
 <script setup lang="ts">
@@ -67,4 +80,11 @@ function playTrack(track: any) {
   playerStore.setCurrentTrack(track)
   playerStore.play()
 }
+
+import { useSidebarStore } from '@stores/sidebar'
+
+const sidebarStore = useSidebarStore()
+
 </script>
+
+

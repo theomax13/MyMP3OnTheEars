@@ -1,5 +1,7 @@
 <template>
-  <div class="app-layout">
+  <div class="app-layout dark-mode">
+
+    <Sidebar />
     <!-- Le player caché existe toujours en fond -->
     <YouTubePlayer />
 
@@ -10,6 +12,7 @@
 
 <script setup lang="ts">
 import YouTubePlayer from './components/YouTubePlayer.vue'
+import Sidebar from './components/Sidebar.vue'
 </script>
 
 <style>
