@@ -6,8 +6,20 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://www.youtube.com; img-src 'self' data: https:; media-src 'self' https:; connect-src 'self' https:; trusted-types default vue youtube-widget-api ad goog#html 'allow-duplicates';"
     />
+
+    <!-- LE SCRIPT SAUVEUR -->
+    <script>
+      if (window.trustedTypes && window.trustedTypes.createPolicy) {
+        window.trustedTypes.createPolicy('default', {
+          createHTML: (string) => string,
+          createScript: (string) => string,
+          createScriptURL: (string) => string
+        })
+      }
+    </script>
+    <!-- trusted-types vue youtube-widget-api default goog#html ad; -->
   </head>
 
   <body>

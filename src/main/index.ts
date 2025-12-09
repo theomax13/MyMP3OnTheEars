@@ -14,8 +14,24 @@ function createWindow(): void {
     webPreferences: {
       contextIsolation: true,
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      webSecurity: true
     }
+  })
+
+  mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    const responseHeaders = details.responseHeaders || {}
+
+    delete responseHeaders['require-trusted-types-for']
+    delete responseHeaders['Require-Trusted-Types-For']
+
+    responseHeaders['Content-Security-Policy'] = [
+      "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://www.youtube.com; img-src 'self' data: https:; media-src 'self' https:; connect-src 'self' https:; trusted-types default vue youtube-widget-api ad goog#html 'allow-duplicates';"
+    ]
+
+    callback({
+      responseHeaders
+    })
   })
 
   mainWindow.on('ready-to-show', () => {
