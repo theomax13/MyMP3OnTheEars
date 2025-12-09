@@ -33,4 +33,7 @@ $ npm run build:linux
 
 ### MAXIME Théo
 
+- Epic 1 : Noyau & Lecteur Audio (Backend) Complete
+- Epic 3 : Données & Contenu Missing Playlist for now
+
 ### GARNIER Emmanuel
