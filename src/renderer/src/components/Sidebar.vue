@@ -22,7 +22,7 @@ import LOGO from '../assets/img/logo.png'
                     <div class="flex items-center justify-between px-6 pt-4 shrink-0">
                         <span class="inline-flex items-center gap-2">
                             <Avatar :image="LOGO" class="mr-2" size="xlarge" shape="circle" />
-                            <span class="font-semibold text-2xl text-primary">MyMP3OnTheEars</span>
+                            <span class="font-semibold text-2xl text-white">MyMP3OnTheEars</span>
                         </span>
                     </div>
                     
@@ -32,24 +32,26 @@ import LOGO from '../assets/img/logo.png'
                             <li>
                                 <ul class="list-none p-0 m-0 overflow-hidden">
                                     <li>
-                                        <a v-ripple class="menu-item p-ripple">
+                                        <router-link to="/search" v-ripple class="menu-item p-ripple">
                                                 <i class="pi pi-home mr-2"></i>
                                             <span class="font-medium">Accueil</span>
-                                        </a>
+                                        </router-link>
                                     </li>
                                     <li>
-                                        <a v-ripple class="menu-item p-ripple">                                            <i class="pi pi-bookmark mr-2"></i>
+                                        <a v-ripple class="menu-item p-ripple">                                            
+                                            <i class="pi pi-heart mr-2"></i>
                                             <span class="font-medium">Favoris</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a v-ripple class="menu-item p-ripple">
-                                            <i class="pi pi-users mr-2"></i>
+                                        <router-link to="/playlist" v-ripple class="menu-item p-ripple">
+                                            <i class="pi pi-list mr-2"></i>
                                             <span class="font-medium">Playlist</span>
-                                        </a>
+                                        </router-link>
                                     </li>
                                     <li>
-                                        <a v-ripple class="menu-item p-ripple">                                            <i class="pi pi-comments mr-2"></i>
+                                        <a v-ripple class="menu-item p-ripple">  
+                                            <i class="pi pi-lightbulb mr-2"></i>
                                             <span class="font-medium">Découvrir</span>
                                         </a>
                                     </li>
@@ -81,8 +83,8 @@ import LOGO from '../assets/img/logo.png'
 
 <style scoped>
 .sidebar-component {
-background: gray;
-}  
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+}
 
 .menu-item {
   display: flex;
@@ -91,11 +93,22 @@ background: gray;
   cursor: pointer;
   padding: 1rem;
   border-radius: var(--p-border-radius);
-  color: white;
-  transition: background-color 0.15s ease;
+  color: #e2e8f0;
+  transition: all 0.2s ease;
 }
 
 .menu-item:hover {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+.menu-item i {
+  color: #94a3b8;
+  transition: color 0.2s ease;
+}
+
+.menu-item:hover i {
+  color: #60a5fa;
 }
 </style>
