@@ -1,28 +1,23 @@
 <template>
-  <img alt="logo" class="logo" src="./assets/electron.svg" />
-  <div class="creator">Powered by electron-vite</div>
-  <div class="text">
-    Build an Electron app with
-    <span class="vue">Vue</span>
-    and
-    <span class="ts">TypeScript</span>
+  <div class="app-layout">
+    <!-- Le player caché existe toujours en fond -->
+    <YouTubePlayer />
+
+    <!-- Ici s'affichera le contenu de la page actuelle (SearchView, etc.) -->
+    <router-view />
   </div>
-  <p class="tip">Please try pressing <code>F12</code> to open the devTool</p>
-  <div class="actions">
-    <div class="action">
-      <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">Documentation</a>
-    </div>
-    <div class="action">
-      <a target="_blank" rel="noreferrer" @click="ipcHandle">Send IPC</a>
-    </div>
-  </div>
-  <!-- <Versions /> -->
-  <YouTubePlayer />
 </template>
 
 <script setup lang="ts">
-// import Versions from './components/Versions.vue'
 import YouTubePlayer from './components/YouTubePlayer.vue'
-
-const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
 </script>
+
+<style>
+/* Un peu de style global si tu veux */
+body {
+  margin: 0;
+  background-color: #121212; /* Couleur Spotify sombre */
+  color: white;
+  font-family: sans-serif;
+}
+</style>

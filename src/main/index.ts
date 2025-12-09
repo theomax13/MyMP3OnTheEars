@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import ytsr from 'ytsr'
 
 function createWindow(): void {
   // Create the browser window.
@@ -26,7 +27,7 @@ function createWindow(): void {
     delete responseHeaders['Require-Trusted-Types-For']
 
     responseHeaders['Content-Security-Policy'] = [
-      "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://www.youtube.com; img-src 'self' data: https:; media-src 'self' https:; connect-src 'self' https:; trusted-types default vue youtube-widget-api ad goog#html 'allow-duplicates';"
+      "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://www.youtube.com; img-src 'self' data: https:; media-src 'self' https: blob:; connect-src 'self' https:; trusted-types default vue youtube-widget-api ad goog#html 'allow-duplicates';"
     ]
 
     callback({
@@ -68,6 +69,31 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+
+  ipcMain.handle('search-youtube', async (event, query) => {
+    try {
+      // Récupère les 10 premiers résultats
+      const filters1 = await ytsr.getFilters(query)
+      const typeFilter = filters1.get('Type')
+      if (!typeFilter) return []
+      const filter1 = typeFilter.get('Video')
+      const options = { limit: 10 }
+      if (!filter1 || !filter1.url) return []
+      const searchResults = await ytsr(filter1.url, options)
+
+      // On nettoie un peu les données pour le front
+      return searchResults.items.map((item: any) => ({
+        id: item.id,
+        title: item.title,
+        thumbnail: item.bestThumbnail?.url,
+        duration: item.duration,
+        channel: item.author?.name
+      }))
+    } catch (error) {
+      console.error('Search error:', error)
+      return []
+    }
+  })
 
   createWindow()
 

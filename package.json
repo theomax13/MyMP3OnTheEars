@@ -27,6 +27,7 @@
     "@tailwindcss/vite": "^4.1.17",
     "pinia": "^3.0.4",
     "primevue": "^4.5.2",
+    "vue-router": "^4.6.3",
     "ytsr": "^3.8.4"
   },
   "devDependencies": {
