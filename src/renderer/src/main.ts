@@ -6,4 +6,4 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import PrimeVue from 'primevue/config'
 
-createApp(App).use(PrimeVue, createPinia).mount('#app')
+createApp(App).use(createPinia()).use(PrimeVue).mount('#app')

@@ -1,9 +1,3 @@
-<script setup lang="ts">
-import Versions from './components/Versions.vue'
-
-const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
-</script>
-
 <template>
   <img alt="logo" class="logo" src="./assets/electron.svg" />
   <div class="creator">Powered by electron-vite</div>
@@ -22,5 +16,13 @@ const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
       <a target="_blank" rel="noreferrer" @click="ipcHandle">Send IPC</a>
     </div>
   </div>
-  <Versions />
+  <!-- <Versions /> -->
+  <YouTubePlayer />
 </template>
+
+<script setup lang="ts">
+// import Versions from './components/Versions.vue'
+import YouTubePlayer from './components/YouTubePlayer.vue'
+
+const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+</script>
