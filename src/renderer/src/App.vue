@@ -21,8 +21,12 @@
 import Sidebar from './components/Sidebar.vue'
 
 import { useSidebarStore } from '@stores/sidebar'
+import { usePlaylistStore } from '@stores/usePlaylistStore'
 
 const sidebarStore = useSidebarStore()
+const playlistStore = usePlaylistStore()
+
+playlistStore.loadPlaylists()
 </script>
 
 <style>

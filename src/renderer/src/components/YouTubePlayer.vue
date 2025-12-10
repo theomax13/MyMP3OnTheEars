@@ -28,11 +28,35 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, computed } from 'vue'
 import { usePlayerStore } from '@stores/usePlayerStore'
+import { watch } from 'vue'
 
 const playerStore = usePlayerStore()
 const currentTrack = computed(() => playerStore.currentTrack)
 
 let timeInterval: number | null = null
+
+watch(
+  () => playerStore.currentTrack,
+  (newTrack) => {
+    if (newTrack && playerStore.playerInstance) {
+      playerStore.playerInstance.loadVideoById(newTrack.id)
+      playerStore.setIsPlaying(true) // Force l'état playing
+    }
+  }
+)
+
+watch(
+  () => playerStore.isPlaying,
+  (isPlaying) => {
+    if (!playerStore.playerInstance) return
+
+    if (isPlaying) {
+      playerStore.playerInstance.playVideo()
+    } else {
+      playerStore.playerInstance.pauseVideo()
+    }
+  }
+)
 
 // Fonction pour générer la thumbnail YouTube
 function getThumbnail(videoId: string): string {

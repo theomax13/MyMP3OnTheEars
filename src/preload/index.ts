@@ -11,7 +11,12 @@ if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', {
-      searchYouTube: (query: string) => ipcRenderer.invoke('search-youtube', query)
+      searchYouTube: (query: string) => ipcRenderer.invoke('search-youtube', query),
+      store: {
+        get: (key: string) => ipcRenderer.invoke('store-get', key),
+        set: (key: string, value: any) => ipcRenderer.invoke('store-set', key, value),
+        delete: (key: string) => ipcRenderer.invoke('store-delete', key)
+      }
     })
   } catch (error) {
     console.error(error)
