@@ -1,34 +1,31 @@
- <template>
-        <!-- Contrôles de lecture avec Dock -->
-        <div class="music-controls">
-            <Dock :model="controlButtons">
-            <template #item="{ item }">
-                <button 
-                @click="item.command" 
-                class="control-button"
-                :title="item.label"
-                >
-                <i :class="item.icon" style="font-size: 1.5rem;"></i>
-                </button>
-            </template>
-            
-            <template>
-                <div class="card flex justify-center">
-                    <Slider v-model="value" class="w-56" />
-                </div>
-            </template>
-            </Dock>
+<template>
+  <!-- Contrôles de lecture avec Dock -->
+  <div class="music-controls">
+    <Dock :model="controlButtons">
+      <template #item="{ item }">
+        <button @click="item.command" class="control-button" :title="item.label">
+          <i :class="item.icon" style="font-size: 1.5rem"></i>
+        </button>
+      </template>
+
+      <template>
+        <div class="card flex justify-center">
+          <Slider v-model="value" class="w-56" />
         </div>
+      </template>
+    </Dock>
+  </div>
 </template>
 
-
-
-<script>
+<script setup lang="ts">
 import { onMounted, onUnmounted, computed } from 'vue'
 import { usePlayerStore } from '@stores/usePlayerStore'
-import Dock from 'primevue/dock'
 import { ref } from 'vue'
-import Slider from 'primevue/slider';
+
+import Dock from 'primevue/dock'
+import Slider from 'primevue/slider'
+
+const playerStore = usePlayerStore()
 
 // Définition des boutons de contrôle
 const controlButtons = ref([
@@ -42,7 +39,7 @@ const controlButtons = ref([
   },
   {
     label: 'Play/Pause',
-    icon: computed(() => playerStore.isPlaying ? 'pi pi-pause' : 'pi pi-play'),
+    icon: computed(() => (playerStore.isPlaying ? 'pi pi-pause' : 'pi pi-play')),
     command: () => {
       if (playerStore.isPlaying) {
         playerStore.pause()
@@ -60,36 +57,34 @@ const controlButtons = ref([
     }
   }
 ])
-
 </script>
 
 <style scoped>
-   
 .music-controls {
-  width: 100%;  /* Prend toute la largeur */
+  width: 100%; /* Prend toute la largeur */
   display: flex;
   justify-content: center;
 }
 
 .music-controls :deep(.p-dock) {
-  background: #1e293b;  /* Fond coloré uni (gris-bleu foncé) */
+  background: #1e293b; /* Fond coloré uni (gris-bleu foncé) */
   border: none;
-  width: 100% ;
-  padding: 1rem;  /* Espacement intérieur */
+  width: 100%;
+  padding: 1rem; /* Espacement intérieur */
 }
 
 .music-controls :deep(.p-dock-list) {
   width: 100%;
   display: flex;
   justify-content: center;
-  gap: 2rem;  /* Espacement entre les boutons */
+  gap: 2rem; /* Espacement entre les boutons */
   border: none;
 }
 
 .music-controls :deep(.p-dock-list-container) {
-background-color: none;
-background: none;
-border: none
+  background-color: none;
+  background: none;
+  border: none;
 }
 
 .control-button {

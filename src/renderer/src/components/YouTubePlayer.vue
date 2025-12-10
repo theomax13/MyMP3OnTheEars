@@ -6,23 +6,23 @@
   ></div>
 
   <!-- Cover affichée -->
-<div class="player-wrapper">
-  <div class="music-cover" v-if="currentTrack">
-    <img :src="getThumbnail(currentTrack.id)" :alt="currentTrack.title" />
-    <div class="track-info">
-      <h3>{{ currentTrack.title }}</h3>
-      <p>{{ currentTrack.artist || 'Artiste inconnu' }}</p>
+  <div class="player-wrapper">
+    <div class="music-cover" v-if="currentTrack">
+      <img :src="getThumbnail(currentTrack.id)" :alt="currentTrack.title" />
+      <div class="track-info">
+        <h3>{{ currentTrack.title }}</h3>
+        <p>{{ currentTrack.channel || 'Artiste inconnu' }}</p>
+      </div>
+    </div>
+
+    <!-- Placeholder quand pas de musique -->
+    <div class="music-cover placeholder" v-else>
+      <div class="no-track">
+        <i class="pi pi-music" style="font-size: 4rem; opacity: 0.3"></i>
+        <p>Aucune piste en lecture</p>
+      </div>
     </div>
   </div>
-  
-  <!-- Placeholder quand pas de musique -->
-  <div class="music-cover placeholder" v-else>
-    <div class="no-track">
-      <i class="pi pi-music" style="font-size: 4rem; opacity: 0.3;"></i>
-      <p>Aucune piste en lecture</p>
-    </div>
-  </div>
-</div>
 </template>
 
 <script setup lang="ts">
@@ -111,38 +111,6 @@ onUnmounted(() => {
     timeInterval = null
   }
 })
-import { ref } from 'vue'
-
-// Définition des boutons de contrôle
-const controlButtons = ref([
-  {
-    label: 'Précédent',
-    icon: 'pi pi-step-backward',
-    command: () => {
-      console.log('Piste précédente')
-      // TODO: playerStore.playPrevious()
-    }
-  },
-  {
-    label: 'Play/Pause',
-    icon: computed(() => (playerStore.isPlaying ? 'pi pi-pause' : 'pi pi-play')),
-    command: () => {
-      if (playerStore.isPlaying) {
-        playerStore.pause()
-      } else {
-        playerStore.play()
-      }
-    }
-  },
-  {
-    label: 'Suivant',
-    icon: 'pi pi-step-forward',
-    command: () => {
-      console.log('Piste suivante')
-      // TODO: playerStore.playNext()
-    }
-  }
-])
 </script>
 
 <style scoped>
@@ -212,5 +180,4 @@ const controlButtons = ref([
   gap: 1rem;
   padding: 2rem;
 }
-
 </style>

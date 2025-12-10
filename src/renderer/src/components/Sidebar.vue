@@ -1,16 +1,3 @@
-<script setup lang="ts">
-import Drawer from 'primevue/drawer'
-import { useSidebarStore } from '@stores/sidebar'
-
-import Button from 'primevue/button'
-import Avatar from 'primevue/avatar'
-
-// On récupère le store
-const sidebarStore = useSidebarStore()
-
-import LOGO from '../assets/img/logo.png'
-</script>
-
 <template>
   <div class="card flex justify-content-center">
     <Drawer v-model:visible="sidebarStore.isVisible" style="border-style: none">
@@ -80,6 +67,17 @@ import LOGO from '../assets/img/logo.png'
     </Drawer>
   </div>
 </template>
+
+<script setup lang="ts">
+import { useSidebarStore } from '@stores/sidebar'
+import LOGO from '../assets/img/logo.png'
+
+import Drawer from 'primevue/drawer'
+import Avatar from 'primevue/avatar'
+
+// On récupère le store
+const sidebarStore = useSidebarStore()
+</script>
 
 <style scoped>
 .menu-item {

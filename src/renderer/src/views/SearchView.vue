@@ -1,46 +1,48 @@
 <template>
   <div class="search-view-container">
-    <YouTubePlayer />
-    <DockComponent />
-    <div class="search-content">
-    <!-- Barre de recherche fixe en haut -->
-    <div class="search-header">
-      <h1 class="text-2xl font-bold mb-4">Recherche</h1>
-      <div class="flex gap-2 mb-6">
-        <input
-          v-model="searchQuery"
-          @keyup.enter="performSearch"
-          type="text"
-          placeholder="Chercher un titre..."
-          class="flex-1 p-2 rounded bg-gray-800 text-white border border-gray-700"
-        />
-        <button
-          @click="performSearch"
-          class="px-4 py-2 bg-green-500 text-black font-bold rounded hover:bg-green-400"
-        >
-          Go
-        </button>
-      </div>
-    </div>
+    <div class="flex">
+      <YouTubePlayer />
+      <div class="search-content">
+        <!-- Barre de recherche fixe en haut -->
+        <div class="search-header">
+          <h1 class="text-2xl font-bold mb-4">Recherche</h1>
+          <div class="flex gap-2 mb-6">
+            <input
+              v-model="searchQuery"
+              @keyup.enter="performSearch"
+              type="text"
+              placeholder="Chercher un titre..."
+              class="flex-1 p-2 rounded bg-gray-800 text-white border border-gray-700"
+            />
+            <button
+              @click="performSearch"
+              class="px-4 py-2 bg-green-500 text-black font-bold rounded hover:bg-green-400"
+            >
+              Go
+            </button>
+          </div>
+        </div>
 
-    <!-- Résultats avec scroll -->
-    <div v-if="isLoading" class="text-gray-400">Chargement...</div>
+        <!-- Résultats avec scroll -->
+        <div v-if="isLoading" class="text-gray-400">Chargement...</div>
 
-    <div v-else class="results-container">
-      <div
-        v-for="track in results"
-        :key="track.id"
-        @click="playTrack(track)"
-        class="flex items-center gap-4 p-3 bg-gray-900/50 hover:bg-gray-800 rounded cursor-pointer transition"
-      >
-        <img :src="track.thumbnail" class="w-16 h-16 object-cover rounded" />
-        <div>
-          <h3 class="font-bold text-white">{{ track.title }}</h3>
-          <p class="text-sm text-gray-400">{{ track.channel }} • {{ track.duration }}</p>
+        <div v-else class="results-container">
+          <div
+            v-for="track in results"
+            :key="track.id"
+            @click="playTrack(track)"
+            class="flex items-center gap-4 p-3 bg-gray-900/50 hover:bg-gray-800 rounded cursor-pointer transition"
+          >
+            <img :src="track.thumbnail" class="w-16 h-16 object-cover rounded" />
+            <div>
+              <h3 class="font-bold text-white">{{ track.title }}</h3>
+              <p class="text-sm text-gray-400">{{ track.channel }} • {{ track.duration }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+    <DockComponent />
   </div>
 </template>
 
@@ -49,7 +51,6 @@ import { ref } from 'vue'
 import { usePlayerStore } from '@stores/usePlayerStore'
 import YouTubePlayer from '../components/YouTubePlayer.vue'
 import DockComponent from '../components/DockComponent.vue'
-import { useSidebarStore } from '@stores/sidebar'
 
 const searchQuery = ref('')
 const results = ref<any[]>([])
@@ -75,15 +76,10 @@ function playTrack(track: any) {
   playerStore.setCurrentTrack(track)
   playerStore.play()
 }
-
-const sidebarStore = useSidebarStore()
-
 </script>
-
 
 <style scoped>
 .search-view-container {
-  display: flex;
   flex-direction: row;
   height: 100vh;
   overflow: hidden;
@@ -95,7 +91,6 @@ const sidebarStore = useSidebarStore()
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .search-header {
@@ -113,8 +108,6 @@ const sidebarStore = useSidebarStore()
   margin-bottom: 1rem; /* Espace de 1rem avant la barre de lecture */
   max-height: calc(100vh - 300px); /* Hauteur max pour éviter chevauchement */
 }
-
-
 
 /* Style de la scrollbar (optionnel) */
 .results-container::-webkit-scrollbar {
@@ -134,6 +127,4 @@ const sidebarStore = useSidebarStore()
 .results-container::-webkit-scrollbar-thumb:hover {
   background: #64748b;
 }
-
-
 </style>
