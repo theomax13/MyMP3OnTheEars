@@ -4,7 +4,9 @@
     <Menubar :model="menubarItems">
       <template #end>
         <span class="px-2">{{ currentTime }}</span>
-      </template>
+        <i class="pi pi-minus px-2 clickable-icon" @click="sidebarStore.minimizeWindow()"></i>
+        <i class="pi pi-plus rotate-45 px-2 clickable-icon" @click="sidebarStore.closeWindow()"></i>
+    </template>
       <template #start>
         <i class="pi pi-bars px-2 clickable-icon" @click="sidebarStore.open()"></i>
     </template>
@@ -54,6 +56,8 @@ const menubarItems = ref([
 }
 
 .menubar-wrapper :deep(.p-menubar) {
+  background-color: #1e293b;
+  color: white;
   border-radius: 0;
   border: none;
   padding: 0.25rem 0.5rem;
