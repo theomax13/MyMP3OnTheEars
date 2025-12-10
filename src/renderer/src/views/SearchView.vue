@@ -31,17 +31,81 @@
             v-for="track in results"
             :key="track.id"
             @click="playTrack(track)"
-            class="flex items-center gap-4 p-3 bg-gray-900/50 hover:bg-gray-800 rounded cursor-pointer transition"
+            class="flex items-center place-content-between p-3 bg-gray-900/50 hover:bg-gray-800 rounded cursor-pointer transition"
           >
-            <img :src="track.thumbnail" class="w-16 h-16 object-cover rounded" />
+            <div class="flex gap-4 items-center">
+              <img :src="track.thumbnail" class="w-16 h-16 object-cover rounded" />
+              <div>
+                <h3 class="font-bold text-white">{{ track.title }}</h3>
+                <p class="text-sm text-gray-400">{{ track.channel }} • {{ track.duration }}</p>
+              </div>
+            </div>
             <div>
-              <h3 class="font-bold text-white">{{ track.title }}</h3>
-              <p class="text-sm text-gray-400">{{ track.channel }} • {{ track.duration }}</p>
+              <button
+                @click.stop="addToFavorites(track)"
+                class="p-3 rounded-full hover:bg-white/10 transition-colors"
+                :class="isFavorite(track) ? 'text-green-500' : 'text-gray-400 hover:text-white'"
+                title="Ajouter aux favoris"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  v-if="isFavorite(track)"
+                >
+                  <path
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                  />
+                </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  v-else
+                >
+                  <path
+                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                  ></path>
+                </svg>
+              </button>
+              <button
+                @click.stop="openPlaylistModal(track)"
+                class="p-3 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                title="Ajouter à une playlist"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <AddToPlaylistModal
+      :is-open="isModalOpen"
+      :track-to-add="selectedTrack"
+      @close="isModalOpen = false"
+    />
     <DockComponent />
   </div>
 </template>
@@ -49,13 +113,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { usePlayerStore } from '@stores/usePlayerStore'
+import { usePlaylistStore } from '@stores/usePlaylistStore'
 import YouTubePlayer from '../components/YouTubePlayer.vue'
 import DockComponent from '../components/DockComponent.vue'
+import AddToPlaylistModal from '../components/AddToPlaylistModal.vue'
 
 const searchQuery = ref('')
 const results = ref<any[]>([])
 const isLoading = ref(false)
+const isModalOpen = ref(false)
+const selectedTrack = ref(null)
 const playerStore = usePlayerStore()
+const playlistStore = usePlaylistStore()
 
 async function performSearch() {
   if (!searchQuery.value.trim()) return
@@ -75,6 +144,21 @@ function playTrack(track: any) {
   // Mise à jour du store -> déclenche le player caché
   playerStore.setCurrentTrack(track)
   playerStore.play()
+}
+
+function addToFavorites(track: any) {
+  // On appelle l'action toggleFavorite du store qu'on a créé tout à l'heure
+  playlistStore.toggleFavorite(track)
+}
+
+function isFavorite(track: any) {
+  // Vérifie si le titre est déjà dans la liste des favoris
+  return playlistStore.favorites.some((t) => t.id === track.id)
+}
+
+function openPlaylistModal(track: any) {
+  selectedTrack.value = track
+  isModalOpen.value = true
 }
 </script>
 

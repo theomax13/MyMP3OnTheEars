@@ -25,6 +25,7 @@
     "@electron-toolkit/utils": "^4.0.0",
     "@primeuix/themes": "^2.0.2",
     "@tailwindcss/vite": "^4.1.17",
+    "electron-store": "^8.1.0",
     "pinia": "^3.0.4",
     "primeicons": "^7.0.0",
     "primevue": "^4.5.2",

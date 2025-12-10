@@ -3,6 +3,9 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import ytsr from 'ytsr'
+import Store from 'electron-store'
+
+const store = new Store()
 
 function createWindow(): void {
   // Create the browser window.
@@ -94,6 +97,18 @@ app.whenReady().then(() => {
       console.error('Search error:', error)
       return []
     }
+  })
+
+  ipcMain.handle('store-get', (event, key) => {
+    return store.get(key)
+  })
+
+  ipcMain.handle('store-set', (event, key, value) => {
+    store.set(key, value)
+  })
+
+  ipcMain.handle('store-delete', (event, key) => {
+    store.delete(key)
   })
 
   createWindow()
