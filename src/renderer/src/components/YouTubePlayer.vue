@@ -227,20 +227,41 @@ const controlButtons = ref([
 }
 
 .music-controls {
+  width: 100%;  /* Prend toute la largeur */
+  display: flex;
+  justify-content: center;
+}
+
+.music-controls :deep(.p-dock) {
+  background: #1e293b;  /* Fond coloré uni (gris-bleu foncé) */
+  border: none;
+  width: 100% ;
+  padding: 1rem;  /* Espacement intérieur */
+}
+
+.music-controls :deep(.p-dock-list) {
   width: 100%;
   display: flex;
-  justify-content: center;  /* Centre le Dock */
+  justify-content: center;
+  gap: 2rem;  /* Espacement entre les boutons */
+  border: none;
 }
-.music-controls :deep(.p-dock) {
-  background: grey !important;
+
+.music-controls :deep(.p-dock-list-container) {
+background-color: none;
+background: none;
+border: none
 }
+
 .control-button {
+  display: flex;
+  align-items: center;
   background: transparent;
   border: none;
   color: white;
   cursor: pointer;
   padding: 0.75rem;
-  border-radius: 50%;
+  border-radius: 10%;
   transition: all 0.2s ease;
 }
 

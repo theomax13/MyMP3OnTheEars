@@ -110,6 +110,8 @@ const sidebarStore = useSidebarStore()
   display: grid;
   gap: 1rem;
   padding-right: 0.5rem; /* Espace pour la scrollbar */
+  margin-bottom: 1rem; /* Espace de 1rem avant la barre de lecture */
+  max-height: calc(100vh - 300px); /* Hauteur max pour éviter chevauchement */
 }
 
 
