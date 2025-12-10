@@ -1,7 +1,10 @@
 <template>
   <!-- Player YouTube caché -->
-  <div id="yt-player-container" style="width: 1px; height: 1px; position: absolute; opacity: 0; pointer-events: none;"></div>
-    
+  <div
+    id="yt-player-container"
+    style="width: 1px; height: 1px; position: absolute; opacity: 0; pointer-events: none"
+  ></div>
+
   <!-- Cover affichée -->
 <div class="player-wrapper">
   <div class="music-cover" v-if="currentTrack">
@@ -56,8 +59,8 @@ onMounted(async () => {
   await loadYouTubeIframeAPI()
 
   const player = new (window as any).YT.Player('yt-player-container', {
-    height: '1',  // Taille minimale
-    width: '1',   // Taille minimale
+    height: '1', // Taille minimale
+    width: '1', // Taille minimale
     videoId: playerStore.currentTrack?.id ?? '',
     playerVars: {
       autoplay: 0,
@@ -108,6 +111,38 @@ onUnmounted(() => {
     timeInterval = null
   }
 })
+import { ref } from 'vue'
+
+// Définition des boutons de contrôle
+const controlButtons = ref([
+  {
+    label: 'Précédent',
+    icon: 'pi pi-step-backward',
+    command: () => {
+      console.log('Piste précédente')
+      // TODO: playerStore.playPrevious()
+    }
+  },
+  {
+    label: 'Play/Pause',
+    icon: computed(() => (playerStore.isPlaying ? 'pi pi-pause' : 'pi pi-play')),
+    command: () => {
+      if (playerStore.isPlaying) {
+        playerStore.pause()
+      } else {
+        playerStore.play()
+      }
+    }
+  },
+  {
+    label: 'Suivant',
+    icon: 'pi pi-step-forward',
+    command: () => {
+      console.log('Piste suivante')
+      // TODO: playerStore.playNext()
+    }
+  }
+])
 </script>
 
 <style scoped>
@@ -173,7 +208,7 @@ onUnmounted(() => {
 .player-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;  /* Centre horizontalement */
+  align-items: center; /* Centre horizontalement */
   gap: 1rem;
   padding: 2rem;
 }

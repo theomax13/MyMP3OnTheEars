@@ -8,6 +8,7 @@ export const usePlayerStore = defineStore('player', {
     currentTrack: null as null | {
       id: string
       title: string
+      channel: string
       thumbnail: string
       duration: number
     },
@@ -28,18 +29,18 @@ export const usePlayerStore = defineStore('player', {
       this.currentTime = seconds
     },
     play() {
-        if (this.playerInstance) {
-          const currentVideoId = this.playerInstance.getVideoData()?.video_id
-          
-          // Charger seulement si c'est une nouvelle musique
-          if (this.currentTrack?.id && currentVideoId !== this.currentTrack.id) {
-            this.playerInstance.loadVideoById(this.currentTrack.id)
-          } else {
-            // Sinon juste reprendre la lecture
-            this.playerInstance.playVideo()
-          }
-          this.isPlaying = true
+      if (this.playerInstance) {
+        const currentVideoId = this.playerInstance.getVideoData()?.video_id
+
+        // Charger seulement si c'est une nouvelle musique
+        if (this.currentTrack?.id && currentVideoId !== this.currentTrack.id) {
+          this.playerInstance.loadVideoById(this.currentTrack.id)
+        } else {
+          // Sinon juste reprendre la lecture
+          this.playerInstance.playVideo()
         }
+        this.isPlaying = true
+      }
     },
     pause() {
       if (this.playerInstance) {
