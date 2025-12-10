@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-
+import PlaylistView from '../views/playlist.vue'
 import SearchView from '../views/SearchView.vue'
 // Tu pourras ajouter HomeView.vue ou LibraryView.vue plus tard
 
@@ -12,6 +12,11 @@ const routes = [
     path: '/search',
     name: 'search',
     component: SearchView
+  },
+  {                           // Lien vers Playlist
+    path: '/playlist',
+    name: 'playlist',
+    component: PlaylistView
   }
 ]
 

@@ -1,28 +1,32 @@
 <template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-4">Recherche</h1>
+  <div class="search-view-container">
+    <YouTubePlayer />
 
-    <!-- Barre de recherche -->
-    <div class="flex gap-2 mb-6">
-      <input
-        v-model="searchQuery"
-        @keyup.enter="performSearch"
-        type="text"
-        placeholder="Chercher un titre..."
-        class="flex-1 p-2 rounded bg-gray-800 text-white border border-gray-700"
-      />
-      <button
-        @click="performSearch"
-        class="px-4 py-2 bg-green-500 text-black font-bold rounded hover:bg-green-400"
-      >
-        Go
-      </button>
+    <div class="search-content">
+    <!-- Barre de recherche fixe en haut -->
+    <div class="search-header">
+      <h1 class="text-2xl font-bold mb-4">Recherche</h1>
+      <div class="flex gap-2 mb-6">
+        <input
+          v-model="searchQuery"
+          @keyup.enter="performSearch"
+          type="text"
+          placeholder="Chercher un titre..."
+          class="flex-1 p-2 rounded bg-gray-800 text-white border border-gray-700"
+        />
+        <button
+          @click="performSearch"
+          class="px-4 py-2 bg-green-500 text-black font-bold rounded hover:bg-green-400"
+        >
+          Go
+        </button>
+      </div>
     </div>
 
-    <!-- Résultats -->
+    <!-- Résultats avec scroll -->
     <div v-if="isLoading" class="text-gray-400">Chargement...</div>
 
-    <div v-else class="grid gap-4">
+    <div v-else class="results-container">
       <div
         v-for="track in results"
         :key="track.id"
@@ -37,11 +41,13 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { usePlayerStore } from '@stores/usePlayerStore'
+import YouTubePlayer from '../components/YouTubePlayer.vue'
 
 const searchQuery = ref('')
 const results = ref<any[]>([])
@@ -67,4 +73,65 @@ function playTrack(track: any) {
   playerStore.setCurrentTrack(track)
   playerStore.play()
 }
+
+import { useSidebarStore } from '@stores/sidebar'
+
+const sidebarStore = useSidebarStore()
+
 </script>
+
+
+<style scoped>
+.search-view-container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+/* La partie recherche + résultats prend le reste */
+.search-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.search-header {
+  flex-shrink: 0; /* Ne se réduit pas */
+  margin-bottom: 1rem;
+  padding: 2rem;
+}
+
+.results-container {
+  flex: 1;
+  overflow-y: auto; /* Active le scroll vertical */
+  display: grid;
+  gap: 1rem;
+  padding-right: 0.5rem; /* Espace pour la scrollbar */
+}
+
+
+
+/* Style de la scrollbar (optionnel) */
+.results-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.results-container::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+.results-container::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+.results-container::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+
+</style>
