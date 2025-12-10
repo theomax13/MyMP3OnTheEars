@@ -94,6 +94,12 @@ export const usePlayerStore = defineStore('player', {
         // Si on est au début, on remet le titre à zéro
         if (this.playerInstance) this.playerInstance.seekTo(0)
       }
+    },
+    seekTo(seconds: number) {
+      if (this.playerInstance) {
+        this.playerInstance.seekTo(seconds, true) // true = allowSeekAhead
+        this.currentTime = seconds // Optimistic update
+      }
     }
   }
 })

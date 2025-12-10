@@ -43,6 +43,7 @@ $ npm run build:linux
 - Store (electron & pinia)
 - IPC
 - Playlist
+- Doomscroll
 
 ### GARNIER Emmanuel
 

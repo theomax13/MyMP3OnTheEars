@@ -100,7 +100,7 @@ app.whenReady().then(() => {
         const filter1 = typeFilter.get('Video')
         if (!filter1 || !filter1.url) return { items: [], continuation: null }
 
-        const options = { limit: 200 }
+        const options = { limit: 20 }
         searchResults = await ytsr(filter1.url, options)
       }
 
