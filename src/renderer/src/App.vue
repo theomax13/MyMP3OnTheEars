@@ -1,9 +1,8 @@
 <template>
   <div class="app-layout dark-mode w-full">
+    <MenuBar />
     <!-- Menu sidebar -->
     <div class="menuBouton">
-      <!-- Bouton burger pour ouvrir la sidebar -->
-      <button class="fixed top-4 left-4 z-1000" @click="sidebarStore.open()">☰ Menu</button>
 
       <!-- Votre contenu existant -->
     </div>
@@ -19,7 +18,7 @@
 
 <script setup lang="ts">
 import Sidebar from './components/Sidebar.vue'
-
+import MenuBar from './components/MenuBar.vue'
 import { useSidebarStore } from '@stores/sidebar'
 import { usePlaylistStore } from '@stores/usePlaylistStore'
 
@@ -37,4 +36,6 @@ body {
   color: white;
   font-family: sans-serif;
 }
+
+
 </style>

@@ -64,6 +64,8 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, computed, ref, watch } from 'vue'
 import { usePlayerStore } from '@stores/usePlayerStore'
+
+import { ref } from 'vue'
 import { usePlaylistStore } from '@stores/usePlaylistStore' // N'oublie pas d'importer ça pour le Like
 
 import Dock from 'primevue/dock'
@@ -185,6 +187,11 @@ const controlButtons = ref([
 .control-button:active {
   transform: scale(0.95);
 }
+
+
+.dock-demo .p-menubar {
+    padding: 0;
+    border-radius: 0;
 
 /* Ajustement slider PrimeVue */
 :deep(.p-slider) {

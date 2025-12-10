@@ -18,6 +18,15 @@ export const useSidebarStore = defineStore('sidebar', () => {
     isVisible.value = !isVisible.value
   }
 
+  //mainWindows fermeture, minimisation
+  function minimizeWindow() {
+    window.electron.ipcRenderer.send('window-minimize')
+  }
+
+  function closeWindow() {
+    window.electron.ipcRenderer.send('window-close')
+  }
+
   // On expose ce qui sera accessible depuis les composants
-  return { isVisible, open, close, toggle }
+  return { isVisible, open, close, toggle, minimizeWindow, closeWindow }
 })
