@@ -1,20 +1,19 @@
 <template>
   <!-- Contrôles de lecture avec Dock -->
-  <div class="music-controls">
-    <Dock :model="controlButtons">
-      <template #item="{ item }">
-        <button @click="item.command" class="control-button" :title="item.label">
-          <i :class="item.icon" style="font-size: 1.5rem"></i>
-        </button>
-      </template>
-
-      <template>
-        <div class="card flex justify-center">
-          <Slider v-model="value" class="w-56" />
-        </div>
-      </template>
-    </Dock>
-  </div>
+    <div class="music-controls">
+      <Dock :model="controlButtons">
+          <template class="place-content-around" #item="{ item }">
+            <div></div>
+            <button v-if="!item.isSlider" @click="item.command" class="control-button" :title="item.label">
+              <i :class="item.icon" style="font-size: 1.5rem"></i>
+            </button>           
+            <div v-if="item.isSlider" class="flex items-center gap-2 px-3">
+               <span class="pi pi-volume-up"></span>
+              <Slider v-model="volume" :min="0" :max="100" :step="0.01" class="w-56" />
+            </div>
+          </template>   
+      </Dock>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -24,8 +23,45 @@ import { ref } from 'vue'
 
 import Dock from 'primevue/dock'
 import Slider from 'primevue/slider'
+import { watch } from 'vue'
+
+const volume = ref(50) // Initial volume (0-1)
+
+watch(volume, (newVol) => {
+  // Si votre playerStore a une méthode pour changer le volume
+  if (playerStore.setVolume) {
+    playerStore.setVolume(newVol)
+  }
+  // Ou si vous accédez directement à l'audio element
+  // playerStore.audioElement.volume = newVol
+})
 
 const playerStore = usePlayerStore()
+
+const handleSpacebar = (event: KeyboardEvent) => {
+  // Prevent page scroll
+  if (event.code === 'Space') {
+    event.preventDefault()
+    event.stopPropagation()
+    
+    // Execute your play/pause logic
+    if (playerStore.isPlaying) {
+      playerStore.pause()
+    } else {
+      playerStore.play()
+    }
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', handleSpacebar)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleSpacebar)
+})
+
+const value = ref(null);
 
 // Définition des boutons de contrôle
 const controlButtons = ref([
@@ -55,8 +91,13 @@ const controlButtons = ref([
       console.log('Piste suivante')
       // TODO: playerStore.playNext()
     }
+  },  
+  {
+    label: 'Volume',
+    isSlider: true,
   }
 ])
+
 </script>
 
 <style scoped>
