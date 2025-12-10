@@ -85,28 +85,40 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  ipcMain.handle('search-youtube', async (event, query) => {
+  // IPC pour la recherche AVEC support de la pagination
+  ipcMain.handle('search-youtube', async (event, { query, continuation }) => {
     try {
-      // Récupère les 10 premiers résultats
-      const filters1 = await ytsr.getFilters(query)
-      const typeFilter = filters1.get('Type')
-      if (!typeFilter) return []
-      const filter1 = typeFilter.get('Video')
-      const options = { limit: 10 }
-      if (!filter1 || !filter1.url) return []
-      const searchResults = await ytsr(filter1.url, options)
+      let searchResults
 
-      // On nettoie un peu les données pour le front
-      return searchResults.items.map((item: any) => ({
+      if (continuation) {
+        searchResults = await ytsr.continueReq(continuation)
+      } else {
+        const filters1 = await ytsr.getFilters(query)
+        const typeFilter = filters1.get('Type')
+        if (!typeFilter) return { items: [], continuation: null }
+
+        const filter1 = typeFilter.get('Video')
+        if (!filter1 || !filter1.url) return { items: [], continuation: null }
+
+        const options = { limit: 200 }
+        searchResults = await ytsr(filter1.url, options)
+      }
+
+      const items = searchResults.items.map((item: any) => ({
         id: item.id,
         title: item.title,
         thumbnail: item.bestThumbnail?.url,
         duration: item.duration,
         channel: item.author?.name
       }))
+
+      return {
+        items,
+        continuation: searchResults.continuation
+      }
     } catch (error) {
       console.error('Search error:', error)
-      return []
+      return { items: [], continuation: null }
     }
   })
 
