@@ -1,40 +1,39 @@
 <template>
   <!-- Player YouTube caché -->
-  <div id="yt-player-container" style="width: 1px; height: 1px; position: absolute; opacity: 0; pointer-events: none;"></div>
-    
-  <!-- Cover affichée -->
-<div class="player-wrapper">
-  <div class="music-cover" v-if="currentTrack">
-    <img :src="getThumbnail(currentTrack.id)" :alt="currentTrack.title" />
-    <div class="track-info">
-      <h3>{{ currentTrack.title }}</h3>
-      <p>{{ currentTrack.artist || 'Artiste inconnu' }}</p>
-    </div>
-  </div>
-  
-  <!-- Placeholder quand pas de musique -->
-  <div class="music-cover placeholder" v-else>
-    <div class="no-track">
-      <i class="pi pi-music" style="font-size: 4rem; opacity: 0.3;"></i>
-      <p>Aucune piste en lecture</p>
-    </div>
-  </div>
+  <div
+    id="yt-player-container"
+    style="width: 1px; height: 1px; position: absolute; opacity: 0; pointer-events: none"
+  ></div>
 
-  <!-- Contrôles de lecture avec Dock -->
-  <div class="music-controls">
-    <Dock :model="controlButtons">
-      <template #item="{ item }">
-        <button 
-          @click="item.command" 
-          class="control-button"
-          :title="item.label"
-        >
-          <i :class="item.icon" style="font-size: 1.5rem;"></i>
-        </button>
-      </template>
-    </Dock>
+  <!-- Cover affichée -->
+  <div class="player-wrapper">
+    <div class="music-cover" v-if="currentTrack">
+      <img :src="getThumbnail(currentTrack.id)" :alt="currentTrack.title" />
+      <div class="track-info">
+        <h3>{{ currentTrack.title }}</h3>
+        <p>{{ currentTrack.channel || 'Artiste inconnu' }}</p>
+      </div>
+    </div>
+
+    <!-- Placeholder quand pas de musique -->
+    <div class="music-cover placeholder" v-else>
+      <div class="no-track">
+        <i class="pi pi-music" style="font-size: 4rem; opacity: 0.3"></i>
+        <p>Aucune piste en lecture</p>
+      </div>
+    </div>
+
+    <!-- Contrôles de lecture avec Dock -->
+    <div class="music-controls">
+      <Dock :model="controlButtons">
+        <template #item="{ item }">
+          <button @click="item.command" class="control-button" :title="item.label">
+            <i :class="item.icon" style="font-size: 1.5rem"></i>
+          </button>
+        </template>
+      </Dock>
+    </div>
   </div>
-</div>
 </template>
 
 <script setup lang="ts">
@@ -72,8 +71,8 @@ onMounted(async () => {
   await loadYouTubeIframeAPI()
 
   const player = new (window as any).YT.Player('yt-player-container', {
-    height: '1',  // Taille minimale
-    width: '1',   // Taille minimale
+    height: '1', // Taille minimale
+    width: '1', // Taille minimale
     videoId: playerStore.currentTrack?.id ?? '',
     playerVars: {
       autoplay: 0,
@@ -138,7 +137,7 @@ const controlButtons = ref([
   },
   {
     label: 'Play/Pause',
-    icon: computed(() => playerStore.isPlaying ? 'pi pi-pause' : 'pi pi-play'),
+    icon: computed(() => (playerStore.isPlaying ? 'pi pi-pause' : 'pi pi-play')),
     command: () => {
       if (playerStore.isPlaying) {
         playerStore.pause()
@@ -221,36 +220,36 @@ const controlButtons = ref([
 .player-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;  /* Centre horizontalement */
+  align-items: center; /* Centre horizontalement */
   gap: 1rem;
   padding: 2rem;
 }
 
 .music-controls {
-  width: 100%;  /* Prend toute la largeur */
+  width: 100%; /* Prend toute la largeur */
   display: flex;
   justify-content: center;
 }
 
 .music-controls :deep(.p-dock) {
-  background: #1e293b;  /* Fond coloré uni (gris-bleu foncé) */
+  background: #1e293b; /* Fond coloré uni (gris-bleu foncé) */
   border: none;
-  width: 100% ;
-  padding: 1rem;  /* Espacement intérieur */
+  width: 100%;
+  padding: 1rem; /* Espacement intérieur */
 }
 
 .music-controls :deep(.p-dock-list) {
   width: 100%;
   display: flex;
   justify-content: center;
-  gap: 2rem;  /* Espacement entre les boutons */
+  gap: 2rem; /* Espacement entre les boutons */
   border: none;
 }
 
 .music-controls :deep(.p-dock-list-container) {
-background-color: none;
-background: none;
-border: none
+  background-color: none;
+  background: none;
+  border: none;
 }
 
 .control-button {
@@ -273,5 +272,4 @@ border: none
 .control-button:active {
   transform: scale(0.95);
 }
-
 </style>
