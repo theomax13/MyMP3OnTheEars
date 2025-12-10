@@ -23,12 +23,6 @@
                     </router-link>
                   </li>
                   <li>
-                    <a v-ripple class="menu-item p-ripple rounded-full">
-                      <i class="pi pi-heart mr-2"></i>
-                      <span class="font-medium">Favoris</span>
-                    </a>
-                  </li>
-                  <li>
                     <router-link to="/playlist" v-ripple class="menu-item p-ripple rounded-full">
                       <i class="pi pi-list mr-2"></i>
                       <span class="font-medium">Playlist</span>
