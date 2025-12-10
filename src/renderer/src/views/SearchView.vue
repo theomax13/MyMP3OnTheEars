@@ -19,7 +19,7 @@
               @click="performSearch"
               class="px-4 py-2 bg-green-500 text-black font-bold rounded hover:bg-green-400 transition-colors"
             >
-              Go
+              <span class="pi pi-search"></span>
             </button>
           </div>
         </div>
@@ -240,6 +240,7 @@ function openPlaylistModal(track: any) {
   overflow-y: auto;
   padding-right: 0.5rem;
   padding-bottom: 120px; /* Espace crucial pour que le dernier item ne soit pas caché par le Dock */
+  max-height: calc(100vh - 300px);
 }
 
 /* Scrollbar Custom */

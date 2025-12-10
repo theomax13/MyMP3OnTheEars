@@ -1,9 +1,29 @@
 <template>
-  <div class="spotify-footer">
+  <div class="spotify-footer relative">
+    <!-- PROGRESS BAR (AT THE VERY TOP EDGE) -->
+    <div class="absolute top-0 left-0 w-full h-[4px] group cursor-pointer z-50">
+      <!-- Background track -->
+      <div class="w-full h-full bg-gray-700"></div>
+
+      <!-- Progress Fill (Green) -->
+      <div
+        class="absolute top-0 left-0 h-full bg-green-500 transition-all duration-100 ease-linear"
+        :style="{ width: progressPercentage + '%' }"
+      ></div>
+
+      <!-- PrimeVue Slider (Invisible but handles interaction) -->
+      <Slider
+        v-model="currentTime"
+        :min="0"
+        :max="duration"
+        @change="handleSeek"
+        class="absolute top-[-6px] left-0 w-full opacity-0 group-hover:opacity-100 transition-opacity custom-top-slider"
+      />
+    </div>
+
     <!-- 1. GAUCHE : Infos Track & Like -->
     <div class="flex items-center gap-4 w-1/3">
       <div v-if="playerStore.currentTrack" class="flex items-center gap-3">
-        <!-- Image qui tourne si ça joue -->
         <img
           :src="playerStore.currentTrack.thumbnail"
           class="w-14 h-14 rounded-full shadow-lg object-cover transition-transform duration-[10s] ease-linear"
@@ -17,9 +37,12 @@
           <span class="text-gray-400 text-xs truncate max-w-[150px]">
             {{ playerStore.currentTrack.channel }}
           </span>
+          <!-- Time info (Optional: show time below artist) -->
+          <span class="text-[10px] text-gray-500 font-mono">
+            {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
+          </span>
         </div>
 
-        <!-- Bouton Like -->
         <button
           @click="
             playlistStore.toggleFavorite({
@@ -29,7 +52,6 @@
           "
           class="ml-2 text-gray-400 hover:text-green-500 transition-colors"
           :class="{ 'text-green-500': isLiked }"
-          title="Ajouter aux favoris"
         >
           <i :class="isLiked ? 'pi pi-heart-fill' : 'pi pi-heart'" style="font-size: 1rem"></i>
         </button>
@@ -38,7 +60,7 @@
       <div v-else class="text-gray-500 text-sm italic ml-4">Prêt à jouer 🎵</div>
     </div>
 
-    <!-- 2. CENTRE : Tes contrôles PrimeVue (Dock) -->
+    <!-- 2. CENTRE : Contrôles Dock -->
     <div class="w-1/3 flex justify-center">
       <div class="music-controls">
         <Dock :model="controlButtons" style="background: none; border: none">
@@ -64,9 +86,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, computed, ref, watch } from 'vue'
 import { usePlayerStore } from '@stores/usePlayerStore'
-
-import { usePlaylistStore } from '@stores/usePlaylistStore' // N'oublie pas d'importer ça pour le Like
-
+import { usePlaylistStore } from '@stores/usePlaylistStore'
 import Dock from 'primevue/dock'
 import Slider from 'primevue/slider'
 
@@ -74,21 +94,56 @@ const playerStore = usePlayerStore()
 const playlistStore = usePlaylistStore()
 const volume = ref(50)
 
-// Gestion du volume
+// --- PROGRESS BAR LOGIC ---
+const currentTime = ref(0)
+const isDragging = ref(false)
+
+const duration = computed(() => {
+  if (!playerStore.currentTrack) return 180 // Default fallback
+  // Parse the string "3:59" into seconds
+  return parseDuration(playerStore.currentTrack.duration)
+})
+
+const progressPercentage = computed(() => {
+  if (!duration.value) return 0
+  return (currentTime.value / duration.value) * 100
+})
+
+// Sync with store time (unless dragging)
+watch(
+  () => playerStore.currentTime,
+  (newVal) => {
+    if (!isDragging.value) {
+      currentTime.value = newVal
+    }
+  }
+)
+
+function handleSeek(val: number | number[]) {
+  // PrimeVue might return event or value
+  const seekTime = typeof val === 'number' ? val : currentTime.value
+  playerStore.seekTo(seekTime)
+}
+
+function formatTime(seconds: number) {
+  if (!seconds || isNaN(seconds)) return '0:00'
+  const m = Math.floor(seconds / 60)
+  const s = Math.floor(seconds % 60)
+  return `${m}:${s < 10 ? '0' : ''}${s}`
+}
+// --------------------------
+
 watch(volume, (newVol) => {
   playerStore.setVolume(Number(newVol))
 })
 
-// Est-ce liké ?
 const isLiked = computed(() => {
   if (!playerStore.currentTrack) return false
   return playlistStore.favorites.some((t) => t.id === playerStore.currentTrack?.id)
 })
 
-// Gestion Espace = Play/Pause
 const handleSpacebar = (event: KeyboardEvent) => {
   if (event.code === 'Space' && (event.target as HTMLElement).tagName !== 'INPUT') {
-    // Évite de bloquer la barre de recherche
     event.preventDefault()
     if (playerStore.isPlaying) playerStore.pause()
     else playerStore.play()
@@ -98,39 +153,42 @@ const handleSpacebar = (event: KeyboardEvent) => {
 onMounted(() => document.addEventListener('keydown', handleSpacebar))
 onUnmounted(() => document.removeEventListener('keydown', handleSpacebar))
 
-// Tes boutons (J'ai retiré le volume d'ici pour le mettre à droite)
 const controlButtons = ref([
-  {
-    label: 'Précédent',
-    icon: 'pi pi-step-backward',
-    command: () => playerStore.playPrevious()
-  },
+  { label: 'Précédent', icon: 'pi pi-step-backward', command: () => playerStore.playPrevious() },
   {
     label: 'Play/Pause',
-    // L'icône réactive grâce à computed
     icon: computed(() => (playerStore.isPlaying ? 'pi pi-pause' : 'pi pi-play')),
-    command: () => {
-      playerStore.isPlaying ? playerStore.pause() : playerStore.play()
-    }
+    command: () => (playerStore.isPlaying ? playerStore.pause() : playerStore.play())
   },
-  {
-    label: 'Suivant',
-    icon: 'pi pi-step-forward',
-    command: () => playerStore.playNext()
-  }
+  { label: 'Suivant', icon: 'pi pi-step-forward', command: () => playerStore.playNext() }
 ])
+
+function parseDuration(durationStr: string | number): number {
+  if (typeof durationStr === 'number') return durationStr
+  if (!durationStr) return 0
+
+  const parts = durationStr.split(':').map(Number)
+  if (parts.length === 2) {
+    // MM:SS -> seconds
+    return parts[0] * 60 + parts[1]
+  }
+  if (parts.length === 3) {
+    // HH:MM:SS -> seconds
+    return parts[0] * 3600 + parts[1] * 60 + parts[2]
+  }
+  return 0
+}
 </script>
 
 <style scoped>
-/* Container principal (Footer fixe) */
 .spotify-footer {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 90px;
-  background-color: #1e293b; /* Ton gris-bleu foncé */
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #1e293b;
+  /* Removed border-top since we have the progress bar now */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -138,7 +196,6 @@ const controlButtons = ref([
   padding: 0 1rem;
 }
 
-/* Animation Vinyle */
 .rotate-animation {
   animation: spin 10s linear infinite;
 }
@@ -157,13 +214,8 @@ const controlButtons = ref([
   gap: 1.5rem;
 }
 
-.music-controls :deep(.p-dock-list-container) {
-  background: none;
-  border: none;
-  background-color: none;
-}
-
 .control-button {
+  /* ... same as before ... */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -177,26 +229,41 @@ const controlButtons = ref([
   width: 50px;
   height: 50px;
 }
-
 .control-button:hover {
   background: rgba(255, 255, 255, 0.1);
   transform: scale(1.1);
 }
-
 .control-button:active {
   transform: scale(0.95);
 }
 
-.dock-demo .p-menubar {
-  padding: 0;
-  border-radius: 0;
+.music-controls :deep(.p-dock-list-container) {
+  background: none;
+  border: none;
+  background-color: none;
 }
 
-/* Ajustement slider PrimeVue */
+/* Volume Slider */
 :deep(.p-slider) {
   background: #475569;
 }
 :deep(.p-slider-range) {
-  background-color: #10b981; /* Vert Spotify */
+  background-color: #10b981;
+}
+
+/* Custom Top Slider (Invisible by default, handle on hover) */
+:deep(.custom-top-slider .p-slider-range) {
+  background: transparent;
+} /* Use our div for color */
+:deep(.custom-top-slider) {
+  background: transparent;
+  height: 12px;
+} /* Bigger hit area */
+:deep(.custom-top-slider .p-slider-handle) {
+  background: white;
+  border: none;
+  width: 12px;
+  height: 12px;
+  margin-top: -6px; /* Center vertically relative to top edge */
 }
 </style>

@@ -43,35 +43,35 @@ Ce projet vise à créer une application de bureau multiplateforme qui émule l'
 
 ### Epic 1 : Noyau & Lecteur Audio (Backend)
 
-- **[Tâche]** Mettre en place la structure du projet avec `electron-vite` et le template Vue 3.
-- **[Tâche]** Créer le store Pinia `usePlayerStore` avec les états : `isPlaying`, `volume`, `currentTime`, `currentTrack`.
-- **[Tâche]** Créer le composant `<YouTubePlayer.vue>` qui charge l'API IFrame.
-- **[Tâche]** Implémenter la logique de contrôle : `play()`, `pause()`, `setVolume()` dans le store, qui déclenche les commandes sur l'instance de l'iFrame.
-- **[Tâche]** Gérer les événements de l'iFrame (`onStateChange`, `onError`) pour mettre à jour le store (ex: passer à la chanson suivante à la fin d'une vidéo).
+- [x] Mettre en place la structure du projet avec `electron-vite` et le template Vue 3.
+- [x] Créer le store Pinia `usePlayerStore` avec les états : `isPlaying`, `volume`, `currentTime`, `currentTrack`.
+- [x] Créer le composant `<YouTubePlayer.vue>` qui charge l'API IFrame.
+- [x] Implémenter la logique de contrôle : `play()`, `pause()`, `setVolume()` dans le store, qui déclenche les commandes sur l'instance de l'iFrame.
+- [x] Gérer les événements de l'iFrame (`onStateChange`, `onError`) pour mettre à jour le store (ex: passer à la chanson suivante à la fin d'une vidéo).
 
 ### Epic 2 : Interface Utilisateur (Frontend)
 
-- **[Tâche]** Installer et configurer Tailwind CSS avec un thème sombre (type Spotify).
-- **[Tâche]** Créer le layout principal de l'application (Composants : `Sidebar.vue`, `PlayerControls.vue`, `MainView.vue`).
-- **[Tâche]** Intégrer `vue-router` pour la navigation (Accueil, Recherche, Bibliothèque).
-- **[Tâche]** Lier les composants UI au `usePlayerStore` :
-  - Le bouton Play/Pause doit refléter l'état `isPlaying`.
-  - Le slider de volume doit lire et écrire la valeur `volume`.
-  - La barre de progression doit se mettre à jour.
-- **[Tâche]** Utiliser `vue-virtual-scroller` pour afficher les longues listes de résultats de recherche ou de playlists.
+- [x] Installer et configurer Tailwind CSS avec un thème sombre (type Spotify).
+- [x] Créer le layout principal de l'application (Composants : `Sidebar.vue`, `PlayerControls.vue`, `MainView.vue`).
+- [x] Intégrer `vue-router` pour la navigation (Accueil, Recherche, Bibliothèque).
+- [x] Lier les composants UI au `usePlayerStore` :
+  - [x] Le bouton Play/Pause doit refléter l'état `isPlaying`.
+  - [x] Le slider de volume doit lire et écrire la valeur `volume`.
+  - [] La barre de progression doit se mettre à jour.
+- [x] Utiliser `vue-virtual-scroller` pour afficher les longues listes de résultats de recherche ou de playlists.
 
 ### Epic 3 : Données & Contenu
 
 - **[Tâche]** Créer un service `youtube.service.js` pour encapsuler les appels à l'API de recherche.
-- **[Tâche]** Développer la page de recherche avec un champ de saisie qui affiche les résultats.
-- **[Tâche]** Au clic sur un résultat, mettre à jour le `currentTrack` dans le store Pinia pour démarrer la lecture.
-- **[Tâche]** Implémenter la logique de playlist : ajouter à la file d'attente, sauvegarder une playlist.
-- **[Tâche]** Utiliser `electron-store` pour rendre les playlists persistantes entre les sessions.
+- [x] Développer la page de recherche avec un champ de saisie qui affiche les résultats.
+- [x] Au clic sur un résultat, mettre à jour le `currentTrack` dans le store Pinia pour démarrer la lecture.
+- [x] Implémenter la logique de playlist : ajouter à la file d'attente, sauvegarder une playlist.
+- [x] Utiliser `electron-store` pour rendre les playlists persistantes entre les sessions.
 
 ### Epic 4 : Intégration & Finalisation
 
-- **[Tâche]** Dans le Main Process, implémenter les `globalShortcut` pour `MediaPlayPause`, `MediaNextTrack`, `MediaPreviousTrack`.
-- **[Tâche]** Faire communiquer ces raccourcis avec le Renderer Process via `ipcMain` et `ipcRenderer`.
-- **[Tâche]** Gérer les erreurs de l'API YouTube (ex: "Vidéo non disponible pour l'intégration").
-- **[Tâche]** Ajouter des transitions visuelles (`<Transition>`) pour fluidifier la navigation entre les pages.
-- **[Tâche]** **[Bonus]** Intégrer l'API `navigator.mediaSession` pour afficher les métadonnées sur l'OS.
+- [] Dans le Main Process, implémenter les `globalShortcut` pour `MediaPlayPause`, `MediaNextTrack`, `MediaPreviousTrack`.
+- [] Faire communiquer ces raccourcis avec le Renderer Process via `ipcMain` et `ipcRenderer`.
+- [] Gérer les erreurs de l'API YouTube (ex: "Vidéo non disponible pour l'intégration").
+- [] Ajouter des transitions visuelles (`<Transition>`) pour fluidifier la navigation entre les pages.
+- [x] **[Bonus]** Intégrer l'API `navigator.mediaSession` pour afficher les métadonnées sur l'OS.
