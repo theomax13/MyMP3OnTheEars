@@ -14,7 +14,7 @@ function createWindow(): void {
     height: 670,
     show: false,
     autoHideMenuBar: true,
-    frame: false, 
+    frame: false,
     titleBarStyle: 'hidden',
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -27,9 +27,9 @@ function createWindow(): void {
   })
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.maximize();
-    mainWindow.show();
-  });
+    mainWindow.maximize()
+    mainWindow.show()
+  })
 
   mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
     const responseHeaders = details.responseHeaders || {}
@@ -61,6 +61,10 @@ function createWindow(): void {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+  }
+
+  if (process.platform === 'darwin') {
+    mainWindow.setWindowButtonVisibility(false)
   }
 }
 
