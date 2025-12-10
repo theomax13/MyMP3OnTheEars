@@ -9,90 +9,85 @@ import Avatar from 'primevue/avatar'
 const sidebarStore = useSidebarStore()
 
 import LOGO from '../assets/img/logo.png'
-
 </script>
 
 <template>
-    <div class="card flex justify-content-center">
-        <Drawer  v-model:visible="sidebarStore.isVisible">
-            <template #container="{ closeCallback }">
-                <div class="flex flex-col h-full sidebar-component">
-                    
-                    <!-- EN-TÊTE -->
-                    <div class="flex items-center justify-between px-6 pt-4 shrink-0">
-                        <span class="inline-flex items-center gap-2">
-                            <Avatar :image="LOGO" class="mr-2" size="xlarge" shape="circle" />
-                            <span class="font-semibold text-2xl text-white">MyMP3OnTheEars</span>
-                        </span>
-                    </div>
-                    
-                    <!-- MENU (Modification ici : ajout de flex-1) -->
-                    <div class="overflow-y-auto flex-1">
-                        <ul class="list-none p-4 m-0">
-                            <li>
-                                <ul class="list-none p-0 m-0 overflow-hidden">
-                                    <li>
-                                        <router-link to="/search" v-ripple class="menu-item p-ripple">
-                                                <i class="pi pi-home mr-2"></i>
-                                            <span class="font-medium">Accueil</span>
-                                        </router-link>
-                                    </li>
-                                    <li>
-                                        <a v-ripple class="menu-item p-ripple">                                            
-                                            <i class="pi pi-heart mr-2"></i>
-                                            <span class="font-medium">Favoris</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <router-link to="/playlist" v-ripple class="menu-item p-ripple">
-                                            <i class="pi pi-list mr-2"></i>
-                                            <span class="font-medium">Playlist</span>
-                                        </router-link>
-                                    </li>
-                                    <li>
-                                        <a v-ripple class="menu-item p-ripple">  
-                                            <i class="pi pi-lightbulb mr-2"></i>
-                                            <span class="font-medium">Découvrir</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a v-ripple class="menu-item p-ripple">
-                                            <i class="pi pi-cog mr-2"></i>
-                                            <span class="font-medium">Paramètres</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <!-- FOOTER (Aligné en bas grâce au flex-1 du dessus) -->
-                    <div class="mt-auto">
-                        <hr class="mb-4 mx-4 border-t border-0 border-surface-200 dark:border-surface-700" />
-                        <a v-ripple class="menu-item m-4 p-ripple">
-                                <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" shape="circle" />
-                            <span class="font-bold">The TONTON</span>
-                        </a>
-                    </div>
+  <div class="card flex justify-content-center">
+    <Drawer v-model:visible="sidebarStore.isVisible" style="border-style: none">
+      <template #container="{ closeCallback }">
+        <div class="flex flex-col h-full bg-[#1e293b]">
+          <!-- EN-TÊTE -->
+          <div class="flex items-center justify-between px-6 pt-4 shrink-0">
+            <span class="inline-flex items-center gap-2">
+              <Avatar :image="LOGO" class="mr-2" size="xlarge" shape="circle" />
+              <span class="font-semibold text-2xl text-white">MyMP3OnTheEars</span>
+            </span>
+          </div>
 
-                </div>
-            </template>
-        </Drawer>
-    </div>
+          <!-- MENU (Modification ici : ajout de flex-1) -->
+          <div class="overflow-y-auto flex-1">
+            <ul class="list-none pt-4 m-0">
+              <li>
+                <ul class="list-none overflow-hidden">
+                  <li>
+                    <router-link to="/search" v-ripple class="menu-item p-ripple rounded-full">
+                      <i class="pi pi-home mr-2"></i>
+                      <span class="font-medium">Accueil</span>
+                    </router-link>
+                  </li>
+                  <li>
+                    <a v-ripple class="menu-item p-ripple rounded-full">
+                      <i class="pi pi-heart mr-2"></i>
+                      <span class="font-medium">Favoris</span>
+                    </a>
+                  </li>
+                  <li>
+                    <router-link to="/playlist" v-ripple class="menu-item p-ripple rounded-full">
+                      <i class="pi pi-list mr-2"></i>
+                      <span class="font-medium">Playlist</span>
+                    </router-link>
+                  </li>
+                  <li>
+                    <a v-ripple class="menu-item p-ripple rounded-full">
+                      <i class="pi pi-lightbulb mr-2"></i>
+                      <span class="font-medium">Découvrir</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a v-ripple class="menu-item p-ripple rounded-full">
+                      <i class="pi pi-cog mr-2"></i>
+                      <span class="font-medium">Paramètres</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <!-- FOOTER (Aligné en bas grâce au flex-1 du dessus) -->
+          <div class="mt-auto overflow-hidden">
+            <hr class="mb-4 mx-4 border-t border-0 border-surface-200 dark:border-surface-700" />
+            <a v-ripple class="menu-item m-4 p-ripple">
+              <Avatar
+                image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png"
+                shape="circle"
+              />
+              <span class="font-bold">The TONTON</span>
+            </a>
+          </div>
+        </div>
+      </template>
+    </Drawer>
+  </div>
 </template>
 
 <style scoped>
-.sidebar-component {
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-}
-
 .menu-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
   padding: 1rem;
-  border-radius: var(--p-border-radius);
   color: #e2e8f0;
   transition: all 0.2s ease;
 }
