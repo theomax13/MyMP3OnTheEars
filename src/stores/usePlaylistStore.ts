@@ -76,6 +76,18 @@ export const usePlaylistStore = defineStore('playlist', {
       await this.save()
     },
 
+    async toggleFavorite(track: Track) {
+      const index = this.favorites.findIndex((t) => t.id === track.id)
+
+      if (index === -1) {
+        this.favorites.push(track)
+      } else {
+        this.favorites.splice(index, 1)
+      }
+
+      await this.save()
+    },
+
     // Sauvegarde globale
     async save() {
       // On utilise JSON.parse/stringify pour enlever les proxies de Vue avant d'envoyer à Electron
