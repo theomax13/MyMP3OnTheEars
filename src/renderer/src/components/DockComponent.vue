@@ -20,7 +20,6 @@
 import { onMounted, onUnmounted, computed } from 'vue'
 import { usePlayerStore } from '@stores/usePlayerStore'
 import { ref } from 'vue'
-
 import Dock from 'primevue/dock'
 import Slider from 'primevue/slider'
 import { watch } from 'vue'
@@ -97,7 +96,6 @@ const controlButtons = ref([
     isSlider: true,
   }
 ])
-
 </script>
 
 <style scoped>
@@ -147,5 +145,10 @@ const controlButtons = ref([
 
 .control-button:active {
   transform: scale(0.95);
+}
+
+.dock-demo .p-menubar {
+    padding: 0;
+    border-radius: 0;
 }
 </style>
