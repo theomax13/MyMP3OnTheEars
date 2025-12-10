@@ -1,7 +1,7 @@
 <template>
   <div class="search-view-container">
     <YouTubePlayer />
-
+    <DockComponent />
     <div class="search-content">
     <!-- Barre de recherche fixe en haut -->
     <div class="search-header">
@@ -48,6 +48,8 @@
 import { ref } from 'vue'
 import { usePlayerStore } from '@stores/usePlayerStore'
 import YouTubePlayer from '../components/YouTubePlayer.vue'
+import DockComponent from '../components/DockComponent.vue'
+import { useSidebarStore } from '@stores/sidebar'
 
 const searchQuery = ref('')
 const results = ref<any[]>([])
@@ -73,8 +75,6 @@ function playTrack(track: any) {
   playerStore.setCurrentTrack(track)
   playerStore.play()
 }
-
-import { useSidebarStore } from '@stores/sidebar'
 
 const sidebarStore = useSidebarStore()
 
