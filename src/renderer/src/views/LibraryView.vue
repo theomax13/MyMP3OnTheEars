@@ -33,7 +33,15 @@
               class="group flex items-center gap-3 p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
             >
               <!-- Clic sur l'image ou le texte pour jouer -->
-              <div class="flex flex-1 items-center gap-3" @click="playTrack(track)">
+              <div
+                class="flex flex-1 items-center gap-3"
+                @click="
+                  playPlaylistContext(
+                    playlistStore.favorites,
+                    playlistStore.favorites.indexOf(track)
+                  )
+                "
+              >
                 <img :src="track.thumbnail" class="w-10 h-10 rounded object-cover shadow-sm" />
                 <div class="overflow-hidden">
                   <div class="font-medium text-sm truncate text-white">{{ track.title }}</div>
@@ -159,9 +167,9 @@
                 </div>
 
                 <div
-                  v-for="track in playlist.tracks"
+                  v-for="(track, index) in playlist.tracks"
                   :key="track.id"
-                  @click="playTrack(track)"
+                  @click="playPlaylistContext(playlist.tracks, index)"
                   class="flex items-center gap-2 p-2 hover:bg-white/5 rounded cursor-pointer group"
                 >
                   <img
@@ -206,6 +214,10 @@ const newListName = ref('')
 function playTrack(track: any) {
   playerStore.setCurrentTrack(track)
   playerStore.play()
+}
+
+function playPlaylistContext(tracks: any[], index: number) {
+  playerStore.playContext(tracks, index)
 }
 
 async function createList() {

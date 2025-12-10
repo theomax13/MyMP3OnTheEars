@@ -12,13 +12,16 @@ export const usePlayerStore = defineStore('player', {
       thumbnail: string
       duration: number
     },
-    playerInstance: null as any // référence à l’instance YT.Player
+    playerInstance: null as any,
+    queue: [] as any[],
+    currentIndex: -1
   }),
   actions: {
     setPlayerInstance(instance: any) {
       this.playerInstance = instance
     },
     setCurrentTrack(track: any) {
+      this.queue = [track]
       this.currentTrack = track
       this.currentTime = 0
     },
@@ -52,6 +55,44 @@ export const usePlayerStore = defineStore('player', {
       this.volume = value
       if (this.playerInstance) {
         this.playerInstance.setVolume(value)
+      }
+    },
+    playContext(tracks: any[], startIndex: number = 0) {
+      this.queue = tracks
+      this.currentIndex = startIndex
+      this.currentTrack = tracks[startIndex]
+      this.isPlaying = true
+
+      // Si l'instance existe déjà, on charge directement
+      if (this.playerInstance && this.currentTrack) {
+        this.playerInstance.loadVideoById(this.currentTrack.id)
+        this.playerInstance.playVideo()
+      }
+    },
+    playNext() {
+      // S'il reste des morceaux après l'actuel
+      if (this.currentIndex < this.queue.length - 1) {
+        this.currentIndex++
+        this.currentTrack = this.queue[this.currentIndex]
+        this.isPlaying = true
+      } else {
+        // Fin de la playlist : on arrête ou on boucle (ici on arrête)
+        this.isPlaying = false
+      }
+
+      if (this.playerInstance && this.currentTrack) {
+        this.playerInstance.playVideo()
+      }
+    },
+    playPrevious() {
+      // Si on n'est pas au début
+      if (this.currentIndex > 0) {
+        this.currentIndex--
+        this.currentTrack = this.queue[this.currentIndex]
+        this.isPlaying = true
+      } else {
+        // Si on est au début, on remet le titre à zéro
+        if (this.playerInstance) this.playerInstance.seekTo(0)
       }
     }
   }

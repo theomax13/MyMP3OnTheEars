@@ -102,7 +102,7 @@ const controlButtons = ref([
   {
     label: 'Précédent',
     icon: 'pi pi-step-backward',
-    command: () => console.log('Prev')
+    command: () => playerStore.playPrevious()
   },
   {
     label: 'Play/Pause',
@@ -115,7 +115,7 @@ const controlButtons = ref([
   {
     label: 'Suivant',
     icon: 'pi pi-step-forward',
-    command: () => console.log('Next')
+    command: () => playerStore.playNext()
   }
 ])
 </script>

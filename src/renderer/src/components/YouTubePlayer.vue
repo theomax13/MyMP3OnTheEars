@@ -120,6 +120,14 @@ onMounted(async () => {
             }
           }, 1000)
         }
+
+        if (event.data === 0) {
+          console.log('Morceau terminé, passage au suivant...')
+          playerStore.playNext() // <--- C'est ici que ça se joue
+        }
+
+        if (event.data === 1) playerStore.setIsPlaying(true)
+        if (event.data === 2) playerStore.setIsPlaying(false)
       },
       onError: (event: any) => {
         console.error('YouTube error', event.data)
