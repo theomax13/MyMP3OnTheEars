@@ -35,5 +35,18 @@ $ npm run build:linux
 
 - Epic 1 : Noyau & Lecteur Audio (Backend) Complete
 - Epic 3 : Données & Contenu Missing Playlist for now
+- Pinia
+- iFrame
+- Previous/Next
+- BackEnd
+- Router
+- Store (electron & pinia)
+- IPC
+- Playlist
 
 ### GARNIER Emmanuel
+
+- Epic 2 : UI
+- Sidebar
+- Playeur
+- Search
