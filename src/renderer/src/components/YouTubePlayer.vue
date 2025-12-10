@@ -1,46 +1,33 @@
 <template>
   <!-- Player YouTube caché -->
-  <div id="yt-player-container" style="width: 1px; height: 1px; position: absolute; opacity: 0; pointer-events: none;"></div>
-    
-  <!-- Cover affichée -->
-<div class="player-wrapper">
-  <div class="music-cover" v-if="currentTrack">
-    <img :src="getThumbnail(currentTrack.id)" :alt="currentTrack.title" />
-    <div class="track-info">
-      <h3>{{ currentTrack.title }}</h3>
-      <p>{{ currentTrack.artist || 'Artiste inconnu' }}</p>
-    </div>
-  </div>
-  
-  <!-- Placeholder quand pas de musique -->
-  <div class="music-cover placeholder" v-else>
-    <div class="no-track">
-      <i class="pi pi-music" style="font-size: 4rem; opacity: 0.3;"></i>
-      <p>Aucune piste en lecture</p>
-    </div>
-  </div>
+  <div
+    id="yt-player-container"
+    style="width: 1px; height: 1px; position: absolute; opacity: 0; pointer-events: none"
+  ></div>
 
-  <!-- Contrôles de lecture avec Dock -->
-  <div class="music-controls">
-    <Dock :model="controlButtons">
-      <template #item="{ item }">
-        <button 
-          @click="item.command" 
-          class="control-button"
-          :title="item.label"
-        >
-          <i :class="item.icon" style="font-size: 1.5rem;"></i>
-        </button>
-      </template>
-    </Dock>
+  <!-- Cover affichée -->
+  <div class="player-wrapper">
+    <div class="music-cover" v-if="currentTrack">
+      <img :src="getThumbnail(currentTrack.id)" :alt="currentTrack.title" />
+      <div class="track-info">
+        <h3>{{ currentTrack.title }}</h3>
+        <p>{{ currentTrack.channel || 'Artiste inconnu' }}</p>
+      </div>
+    </div>
+
+    <!-- Placeholder quand pas de musique -->
+    <div class="music-cover placeholder" v-else>
+      <div class="no-track">
+        <i class="pi pi-music" style="font-size: 4rem; opacity: 0.3"></i>
+        <p>Aucune piste en lecture</p>
+      </div>
+    </div>
   </div>
-</div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, computed } from 'vue'
 import { usePlayerStore } from '@stores/usePlayerStore'
-import Dock from 'primevue/dock'
 
 const playerStore = usePlayerStore()
 const currentTrack = computed(() => playerStore.currentTrack)
@@ -72,8 +59,8 @@ onMounted(async () => {
   await loadYouTubeIframeAPI()
 
   const player = new (window as any).YT.Player('yt-player-container', {
-    height: '1',  // Taille minimale
-    width: '1',   // Taille minimale
+    height: '1', // Taille minimale
+    width: '1', // Taille minimale
     videoId: playerStore.currentTrack?.id ?? '',
     playerVars: {
       autoplay: 0,
@@ -124,38 +111,6 @@ onUnmounted(() => {
     timeInterval = null
   }
 })
-import { ref } from 'vue'
-
-// Définition des boutons de contrôle
-const controlButtons = ref([
-  {
-    label: 'Précédent',
-    icon: 'pi pi-step-backward',
-    command: () => {
-      console.log('Piste précédente')
-      // TODO: playerStore.playPrevious()
-    }
-  },
-  {
-    label: 'Play/Pause',
-    icon: computed(() => playerStore.isPlaying ? 'pi pi-pause' : 'pi pi-play'),
-    command: () => {
-      if (playerStore.isPlaying) {
-        playerStore.pause()
-      } else {
-        playerStore.play()
-      }
-    }
-  },
-  {
-    label: 'Suivant',
-    icon: 'pi pi-step-forward',
-    command: () => {
-      console.log('Piste suivante')
-      // TODO: playerStore.playNext()
-    }
-  }
-])
 </script>
 
 <style scoped>
@@ -221,36 +176,8 @@ const controlButtons = ref([
 .player-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;  /* Centre horizontalement */
+  align-items: center; /* Centre horizontalement */
   gap: 1rem;
   padding: 2rem;
 }
-
-.music-controls {
-  width: 100%;
-  display: flex;
-  justify-content: center;  /* Centre le Dock */
-}
-.music-controls :deep(.p-dock) {
-  background: grey !important;
-}
-.control-button {
-  background: transparent;
-  border: none;
-  color: white;
-  cursor: pointer;
-  padding: 0.75rem;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.control-button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: scale(1.1);
-}
-
-.control-button:active {
-  transform: scale(0.95);
-}
-
 </style>
