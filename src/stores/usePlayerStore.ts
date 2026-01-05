@@ -62,12 +62,7 @@ export const usePlayerStore = defineStore('player', {
       this.currentIndex = startIndex
       this.currentTrack = tracks[startIndex]
       this.isPlaying = true
-
-      // Si l'instance existe déjà, on charge directement
-      if (this.playerInstance && this.currentTrack) {
-        this.playerInstance.loadVideoById(this.currentTrack.id)
-        this.playerInstance.playVideo()
-      }
+      // Le watcher dans YouTubePlayer.vue gérera le chargement via loadVideoById
     },
     playNext() {
       // S'il reste des morceaux après l'actuel
@@ -75,13 +70,13 @@ export const usePlayerStore = defineStore('player', {
         this.currentIndex++
         this.currentTrack = this.queue[this.currentIndex]
         this.isPlaying = true
+        // Le watcher détectera le changement de currentTrack et lancera la lecture
       } else {
-        // Fin de la playlist : on arrête ou on boucle (ici on arrête)
+        // Fin de la playlist : on arrête
         this.isPlaying = false
-      }
-
-      if (this.playerInstance && this.currentTrack) {
-        this.playerInstance.playVideo()
+        if (this.playerInstance) {
+          this.playerInstance.pauseVideo()
+        }
       }
     },
     playPrevious() {
@@ -90,9 +85,14 @@ export const usePlayerStore = defineStore('player', {
         this.currentIndex--
         this.currentTrack = this.queue[this.currentIndex]
         this.isPlaying = true
+        // Le watcher détectera le changement de currentTrack
       } else {
-        // Si on est au début, on remet le titre à zéro
-        if (this.playerInstance) this.playerInstance.seekTo(0)
+        // Si on est au début, on remet le titre à zéro et on s'assure que ça joue
+        if (this.playerInstance) {
+          this.playerInstance.seekTo(0)
+          this.playerInstance.playVideo()
+          this.isPlaying = true
+        }
       }
     },
     seekTo(seconds: number) {

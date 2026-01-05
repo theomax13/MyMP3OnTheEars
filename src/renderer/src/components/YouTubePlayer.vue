@@ -26,12 +26,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, computed } from 'vue'
+import { onMounted, onUnmounted, computed, ref } from 'vue'
 import { usePlayerStore } from '@stores/usePlayerStore'
 import { watch } from 'vue'
 
 const playerStore = usePlayerStore()
 const currentTrack = computed(() => playerStore.currentTrack)
+const isSwitchingTrack = ref(false)
 
 let timeInterval: number | null = null
 
@@ -39,6 +40,7 @@ watch(
   () => playerStore.currentTrack,
   (newTrack) => {
     if (newTrack && playerStore.playerInstance) {
+      isSwitchingTrack.value = true
       playerStore.playerInstance.loadVideoById(newTrack.id)
       playerStore.setIsPlaying(true) // Force l'état playing
     }
@@ -99,16 +101,21 @@ onMounted(async () => {
         const state = event.data
 
         if (state === (window as any).YT.PlayerState.PLAYING) {
+          isSwitchingTrack.value = false
           playerStore.setIsPlaying(true)
         }
 
         if (state === (window as any).YT.PlayerState.PAUSED) {
-          playerStore.setIsPlaying(false)
+          // Ignorer l'événement PAUSED si on est en train de changer de piste
+          // car loadVideoById peut déclencher un arrêt momentané
+          if (!isSwitchingTrack.value) {
+            playerStore.setIsPlaying(false)
+          }
         }
 
         if (state === (window as any).YT.PlayerState.ENDED) {
           playerStore.setIsPlaying(false)
-          // TODO : appeler une action du store pour passer à la piste suivante
+          isSwitchingTrack.value = false
         }
 
         // Démarrer l'interval seulement une fois
@@ -123,14 +130,21 @@ onMounted(async () => {
 
         if (event.data === 0) {
           console.log('Morceau terminé, passage au suivant...')
-          playerStore.playNext() // <--- C'est ici que ça se joue
+          playerStore.playNext()
         }
 
-        if (event.data === 1) playerStore.setIsPlaying(true)
-        if (event.data === 2) playerStore.setIsPlaying(false)
+        // Cas spécifiques numériques (backward compatibility)
+        if (event.data === 1) { // PLAYING
+           isSwitchingTrack.value = false
+           playerStore.setIsPlaying(true)
+        }
+        if (event.data === 2 && !isSwitchingTrack.value) { // PAUSED
+           playerStore.setIsPlaying(false)
+        }
       },
       onError: (event: any) => {
         console.error('YouTube error', event.data)
+        isSwitchingTrack.value = false // Reset au cas où
       }
     }
   })

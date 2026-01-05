@@ -52,3 +52,5 @@ $ npm run build:linux
 - Sidebar
 - Playeur
 - Search
+- Custom Window bar
+- Epic 5

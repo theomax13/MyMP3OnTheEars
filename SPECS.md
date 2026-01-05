@@ -75,3 +75,19 @@ Ce projet vise à créer une application de bureau multiplateforme qui émule l'
 - [] Gérer les erreurs de l'API YouTube (ex: "Vidéo non disponible pour l'intégration").
 - [] Ajouter des transitions visuelles (`<Transition>`) pour fluidifier la navigation entre les pages.
 - [x] **[Bonus]** Intégrer l'API `navigator.mediaSession` pour afficher les métadonnées sur l'OS.
+
+### Epic 5 : Page Découverte & Playlists
+
+- [x] Créer la vue `DiscoverView.vue` dédiée à l'exploration de playlists.
+- [x] Intégrer la bibliothèque `yt-search` (backend) pour la recherche de playlists et vidéos.
+- [x] Intégrer la bibliothèque `ytpl` (backend) pour récupérer le contenu complet des playlists.
+- [x] Mettre en place les handlers IPC `search-youtube` (supportant le type `Video` ou `Playlist`) et `get-playlist`.
+- [x] Implémenter le système de suggestions rapides (cartes cliquables : "Top Hits", "Nouveautés", etc.).
+- [x] Gérer l'affichage des résultats sous forme de grille avec scroll infini.
+- [x] Permettre la lecture directe d'une playlist : récupération des titres et lancement dans le player via `playerStore.playContext`.
+
+### Epic 6 : ???
+- [ ] 
+
+
+

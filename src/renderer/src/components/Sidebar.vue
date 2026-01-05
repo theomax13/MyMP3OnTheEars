@@ -29,10 +29,10 @@
                     </router-link>
                   </li>
                   <li>
-                    <a v-ripple class="menu-item p-ripple rounded-full">
+                    <router-link to="/discover" v-ripple class="menu-item p-ripple rounded-full">
                       <i class="pi pi-lightbulb mr-2"></i>
                       <span class="font-medium">Découvrir</span>
-                    </a>
+                    </router-link>
                   </li>
                   <li>
                     <a v-ripple class="menu-item p-ripple rounded-full">

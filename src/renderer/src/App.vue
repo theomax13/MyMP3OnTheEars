@@ -3,7 +3,6 @@
     <MenuBar />
     <!-- Menu sidebar -->
     <div class="menuBouton">
-
       <!-- Votre contenu existant -->
     </div>
     <Sidebar />
@@ -36,6 +35,4 @@ body {
   color: white;
   font-family: sans-serif;
 }
-
-
 </style>

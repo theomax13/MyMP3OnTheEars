@@ -2,7 +2,8 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import ytsr from 'ytsr'
+import yts from 'yt-search'
+import ytpl from 'ytpl'
 import Store from 'electron-store'
 
 const store = new Store()
@@ -16,7 +17,7 @@ function createWindow(): void {
     autoHideMenuBar: true,
     frame: false,
     titleBarStyle: 'hidden',
-    ...(process.platform === 'linux' ? { icon } : {}),
+    icon,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
@@ -85,36 +86,34 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  // IPC pour la recherche AVEC support de la pagination
-  ipcMain.handle('search-youtube', async (event, { query, continuation }) => {
+  // IPC pour la recherche AVEC support de la pagination et type (Video/Playlist)
+  ipcMain.handle('search-youtube', async (event, { query, type = 'Video' }) => {
     try {
-      let searchResults
+      // Note: yt-search ne supporte pas la pagination de la même manière que ytsr
+      // On fait une recherche simple pour l'instant
+      const r = await yts(query)
+      let results: any[] = []
 
-      if (continuation) {
-        searchResults = await ytsr.continueReq(continuation)
+      if (type === 'Playlist') {
+        results = r.playlists || []
       } else {
-        const filters1 = await ytsr.getFilters(query)
-        const typeFilter = filters1.get('Type')
-        if (!typeFilter) return { items: [], continuation: null }
-
-        const filter1 = typeFilter.get('Video')
-        if (!filter1 || !filter1.url) return { items: [], continuation: null }
-
-        const options = { limit: 20 }
-        searchResults = await ytsr(filter1.url, options)
+        results = r.videos || []
       }
 
-      const items = searchResults.items.map((item: any) => ({
-        id: item.id,
+      const items = results.map((item: any) => ({
+        id: item.videoId || item.listId,
         title: item.title,
-        thumbnail: item.bestThumbnail?.url,
-        duration: item.duration,
-        channel: item.author?.name
+        thumbnail: item.thumbnail || item.image,
+        duration: item.duration ? item.duration.timestamp : '',
+        channel: item.author?.name,
+        type: type,
+        url: item.url,
+        length: item.videoCount // spécifique aux playlists
       }))
 
       return {
         items,
-        continuation: searchResults.continuation
+        continuation: null // yt-search ne gère pas la pagination via token facilement
       }
     } catch (error) {
       console.error('Search error:', error)
@@ -132,6 +131,27 @@ app.whenReady().then(() => {
 
   ipcMain.handle('store-delete', (event, key) => {
     store.delete(key)
+  })
+
+  // IPC pour récupérer le contenu d'une playlist
+  ipcMain.handle('get-playlist', async (event, playlistId) => {
+    try {
+      const playlist = await ytpl(playlistId, { limit: 100 })
+      return {
+        title: playlist.title,
+        items: playlist.items.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          thumbnail: item.bestThumbnail?.url || item.thumbnail,
+          duration: item.duration,
+          channel: item.author?.name,
+          url: item.shortUrl || item.url
+        }))
+      }
+    } catch (error) {
+      console.error('Playlist fetch error:', error)
+      return { items: [] }
+    }
   })
 
   createWindow()

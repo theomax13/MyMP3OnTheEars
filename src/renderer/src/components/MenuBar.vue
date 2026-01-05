@@ -4,12 +4,12 @@
     <Menubar :model="menubarItems">
       <template #end>
         <span class="px-2">{{ currentTime }}</span>
-        <i class="pi pi-minus px-2 clickable-icon" @click="sidebarStore.minimizeWindow()"></i>
-        <i class="pi pi-plus rotate-45 px-2 clickable-icon" @click="sidebarStore.closeWindow()"></i>
-    </template>
+        <i class="pi pi-minus px-2 clickable-icon" @click="minimizeWindow()"></i>
+        <i class="pi pi-plus rotate-45 px-2 clickable-icon" @click="closeWindow()"></i>
+      </template>
       <template #start>
         <i class="pi pi-bars px-2 clickable-icon" @click="sidebarStore.open()"></i>
-    </template>
+      </template>
     </Menubar>
   </div>
 </template>
@@ -19,6 +19,7 @@ import { ref, onMounted } from 'vue'
 import Menubar from 'primevue/menubar'
 import Toast from 'primevue/toast'
 import { useSidebarStore } from '@stores/sidebar'
+import { minimizeWindow, closeWindow } from '../utils/mainWindows'
 
 const sidebarStore = useSidebarStore()
 // Heure actuelle
@@ -26,9 +27,9 @@ const currentTime = ref('')
 onMounted(() => {
   const updateTime = () => {
     const now = new Date()
-    currentTime.value = now.toLocaleTimeString('fr-FR', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    currentTime.value = now.toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit'
     })
   }
   updateTime()
@@ -36,14 +37,14 @@ onMounted(() => {
 })
 
 const menubarItems = ref([
-    // {
-    //     label: 'Menu',
-    //     icon: 'pi pi-bars',
-    //     command: () => {
-    //     // Logique pour ouvrir le sidebar
-    //     sidebarStore.open()
-    //     }
-    // }
+  // {
+  //     label: 'Menu',
+  //     icon: 'pi pi-bars',
+  //     command: () => {
+  //     // Logique pour ouvrir le sidebar
+  //     sidebarStore.open()
+  //     }
+  // }
 ])
 </script>
 
@@ -68,8 +69,6 @@ const menubarItems = ref([
 .menubar-wrapper :deep(.p-menuitem-link) {
   -webkit-app-region: no-drag;
 }
-
-
 
 .clickable-icon {
   -webkit-app-region: no-drag;

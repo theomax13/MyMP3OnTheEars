@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import SearchView from '../views/SearchView.vue'
 import LibraryView from '@renderer/views/LibraryView.vue'
+import DiscoverView from '@renderer/views/DiscoverView.vue'
 
 const routes = [
   {
@@ -16,6 +17,11 @@ const routes = [
     path: '/playlist',
     name: 'playlist',
     component: LibraryView
+  },
+  {
+    path: '/discover',
+    name: 'discover',
+    component: DiscoverView
   }
 ]
 

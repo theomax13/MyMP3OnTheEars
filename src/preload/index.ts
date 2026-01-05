@@ -11,8 +11,9 @@ if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', {
-      searchYouTube: (args: { query?: string; continuation?: any }) =>
+      searchYouTube: (args: { query?: string; continuation?: any; type?: string }) =>
         ipcRenderer.invoke('search-youtube', args),
+      getPlaylist: (playlistId: string) => ipcRenderer.invoke('get-playlist', playlistId),
       store: {
         get: (key: string) => ipcRenderer.invoke('store-get', key),
         set: (key: string, value: any) => ipcRenderer.invoke('store-set', key, value),
