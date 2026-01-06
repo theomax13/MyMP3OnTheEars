@@ -10,14 +10,14 @@
           <div class="flex gap-2 mb-6">
             <input
               v-model="searchQuery"
-              @keyup.enter="performSearch"
               type="text"
               placeholder="Chercher un titre..."
               class="flex-1 p-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500 transition-colors"
+              @keyup.enter="performSearch"
             />
             <button
-              @click="performSearch"
               class="px-4 py-2 bg-green-500 text-black font-bold rounded hover:bg-green-400 transition-colors"
+              @click="performSearch"
             >
               <span class="pi pi-search"></span>
             </button>
@@ -121,6 +121,7 @@
 import { ref } from 'vue'
 import { usePlayerStore } from '@stores/usePlayerStore'
 import { usePlaylistStore } from '@stores/usePlaylistStore'
+import { useToast } from 'primevue/usetoast'
 import YouTubePlayer from '../components/YouTubePlayer.vue'
 import DockComponent from '../components/DockComponent.vue'
 import AddToPlaylistModal from '../components/AddToPlaylistModal.vue'
@@ -138,10 +139,11 @@ const isModalOpen = ref(false)
 const selectedTrack = ref(null)
 const playerStore = usePlayerStore()
 const playlistStore = usePlaylistStore()
+const toast = useToast()
 
 // --- RECHERCHE & PAGINATION ---
 
-async function performSearch() {
+async function performSearch(): Promise<void> {
   if (!searchQuery.value.trim()) return
 
   isLoading.value = true
@@ -151,16 +153,31 @@ async function performSearch() {
   try {
     // Appel initial
     const response = await (window.api as any).searchYouTube({ query: searchQuery.value })
-    results.value = response.items
+    results.value = response.items || []
     continuationToken.value = response.continuation
-  } catch (e) {
+
+    if (response.error) {
+      toast.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: response.error,
+        life: 4000
+      })
+    }
+  } catch (e: any) {
     console.error('Erreur recherche', e)
+    toast.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: 'Impossible de contacter le service de recherche.',
+      life: 4000
+    })
   } finally {
     isLoading.value = false
   }
 }
 
-async function loadMore() {
+async function loadMore(): Promise<void> {
   if (isLoadingMore.value || !continuationToken.value) return
 
   isLoadingMore.value = true
@@ -178,7 +195,7 @@ async function loadMore() {
   }
 }
 
-function handleScroll() {
+function handleScroll(): void {
   const el = scrollContainer.value
   if (!el) return
 
@@ -243,21 +260,5 @@ function openPlaylistModal(track: any) {
   max-height: calc(100vh - 300px);
 }
 
-/* Scrollbar Custom */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #475569;
-}
 </style>
+

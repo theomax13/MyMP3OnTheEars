@@ -103,19 +103,16 @@ onMounted(async () => {
         if (state === (window as any).YT.PlayerState.PLAYING) {
           isSwitchingTrack.value = false
           playerStore.setIsPlaying(true)
-        }
-
-        if (state === (window as any).YT.PlayerState.PAUSED) {
+        } else if (state === (window as any).YT.PlayerState.PAUSED) {
           // Ignorer l'événement PAUSED si on est en train de changer de piste
-          // car loadVideoById peut déclencher un arrêt momentané
           if (!isSwitchingTrack.value) {
             playerStore.setIsPlaying(false)
           }
-        }
-
-        if (state === (window as any).YT.PlayerState.ENDED) {
+        } else if (state === (window as any).YT.PlayerState.ENDED) {
           playerStore.setIsPlaying(false)
           isSwitchingTrack.value = false
+          console.log('Morceau terminé, passage au suivant...')
+          playerStore.playNext()
         }
 
         // Démarrer l'interval seulement une fois
@@ -126,22 +123,6 @@ onMounted(async () => {
               playerStore.setCurrentTime(Math.floor(t))
             }
           }, 1000)
-        }
-
-        if (event.data === 0) {
-          console.log('Morceau terminé, passage au suivant...')
-          playerStore.playNext()
-        }
-
-        // Cas spécifiques numériques (backward compatibility)
-        if (event.data === 1) {
-          // PLAYING
-          isSwitchingTrack.value = false
-          playerStore.setIsPlaying(true)
-        }
-        if (event.data === 2 && !isSwitchingTrack.value) {
-          // PAUSED
-          playerStore.setIsPlaying(false)
         }
       },
       onError: (event: any) => {

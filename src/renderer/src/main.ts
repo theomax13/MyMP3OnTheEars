@@ -3,6 +3,7 @@ import 'primeicons/primeicons.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import ToastService from 'primevue/toastservice'
 
 import App from './App.vue'
 import router from './router'
@@ -24,7 +25,7 @@ createApp(App)
       }
     }
   })
-
+  .use(ToastService)
   .directive('ripple', Ripple)
   .directive('styleclass', StyleClass)
   .mount('#app')

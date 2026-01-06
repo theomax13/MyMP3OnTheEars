@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import Menubar from 'primevue/menubar'
 import Toast from 'primevue/toast'
 import { useSidebarStore } from '@stores/sidebar'
@@ -24,6 +24,8 @@ import { minimizeWindow, closeWindow } from '../utils/mainWindows'
 const sidebarStore = useSidebarStore()
 // Heure actuelle
 const currentTime = ref('')
+let intervalId: ReturnType<typeof setInterval>
+
 onMounted(() => {
   const updateTime = () => {
     const now = new Date()
@@ -33,7 +35,13 @@ onMounted(() => {
     })
   }
   updateTime()
-  setInterval(updateTime, 1000)
+  intervalId = setInterval(updateTime, 1000)
+})
+
+onUnmounted(() => {
+  if (intervalId) {
+    clearInterval(intervalId)
+  }
 })
 
 const menubarItems = ref([

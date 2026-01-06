@@ -47,10 +47,6 @@ function createWindow(): void {
     })
   })
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
-  })
-
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
@@ -113,11 +109,15 @@ app.whenReady().then(() => {
 
       return {
         items,
-        continuation: null // yt-search ne gère pas la pagination via token facilement
+        continuation: null
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Search error:', error)
-      return { items: [], continuation: null }
+      return { 
+        items: [], 
+        continuation: null, 
+        error: error.message || 'Une erreur est survenue lors de la recherche.' 
+      }
     }
   })
 
@@ -148,9 +148,12 @@ app.whenReady().then(() => {
           url: item.shortUrl || item.url
         }))
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Playlist fetch error:', error)
-      return { items: [] }
+      return { 
+        items: [], 
+        error: error.message || 'Impossible de récupérer le contenu de la playlist.' 
+      }
     }
   })
 

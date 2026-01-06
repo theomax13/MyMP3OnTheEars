@@ -154,9 +154,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { usePlayerStore } from '@stores/usePlayerStore'
+import { useToast } from 'primevue/usetoast'
 import YouTubePlayer from '../components/YouTubePlayer.vue'
 
 const playerStore = usePlayerStore()
+const toast = useToast()
 
 // États
 const searchQuery = ref('')
@@ -244,10 +246,25 @@ async function performSearch() {
       query: searchQuery.value,
       type: 'Playlist'
     })
-    results.value = response.items
+    results.value = response.items || []
     continuationToken.value = response.continuation
-  } catch (e) {
+
+    if (response.error) {
+      toast.add({
+        severity: 'error',
+        summary: 'Erreur de recherche',
+        detail: response.error,
+        life: 5000
+      })
+    }
+  } catch (e: any) {
     console.error('Erreur recherche playlists', e)
+    toast.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: 'Impossible de contacter le service de recherche.',
+      life: 5000
+    })
   } finally {
     isLoading.value = false
   }
@@ -268,10 +285,21 @@ async function playPlaylist(playlist: any) {
     if (data && data.items && data.items.length > 0) {
       playerStore.playContext(data.items, 0)
     } else {
-      console.warn('Playlist vide ou inaccessible')
+      toast.add({
+        severity: 'warn',
+        summary: 'Playlist vide',
+        detail: data.error || 'Cette playlist ne contient aucun titre accessible.',
+        life: 4000
+      })
     }
-  } catch (e) {
+  } catch (e: any) {
     console.error('Erreur lors du lancement de la playlist', e)
+    toast.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: 'Impossible de charger la playlist.',
+      life: 4000
+    })
   } finally {
     isLoading.value = false
   }
@@ -326,21 +354,5 @@ function handleScroll() {
   min-height: 0; /* Important pour que le child scroll */
 }
 
-/* Scrollbar Custom */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #475569;
-}
 </style>
+
