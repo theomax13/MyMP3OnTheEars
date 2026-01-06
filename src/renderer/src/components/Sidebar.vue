@@ -6,7 +6,7 @@
           <!-- EN-TÊTE -->
           <div class="flex items-center justify-between px-6 pt-4 shrink-0">
             <span class="inline-flex items-center gap-2">
-              <Avatar :image="LOGO" class="mr-2" size="xlarge" shape="circle" />
+              <Avatar :image="AppLogo" class="mr-2" size="xlarge" shape="circle" />
               <span class="font-semibold text-2xl text-white">MyMP3OnTheEars</span>
             </span>
           </div>
@@ -68,6 +68,8 @@ import LOGO from '../assets/img/logo.png'
 
 import Drawer from 'primevue/drawer'
 import Avatar from 'primevue/avatar'
+
+const AppLogo = LOGO
 
 // On récupère le store
 const sidebarStore = useSidebarStore()

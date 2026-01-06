@@ -211,10 +211,7 @@ const playlistStore = usePlaylistStore()
 const playerStore = usePlayerStore()
 const newListName = ref('')
 
-function playTrack(track: any) {
-  playerStore.setCurrentTrack(track)
-  playerStore.play()
-}
+
 
 function playPlaylistContext(tracks: any[], index: number) {
   playerStore.playContext(tracks, index)

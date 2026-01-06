@@ -1,16 +1,7 @@
 // src/stores/usePlaylistStore.ts
 import { defineStore } from 'pinia'
 
-declare global {
-  interface Window {
-    api: {
-      store: {
-        get: (key: string) => Promise<any>
-        set: (key: string, value: any) => Promise<void>
-      }
-    }
-  }
-}
+
 
 // Assure-toi que ces interfaces sont exportées
 export interface Track {

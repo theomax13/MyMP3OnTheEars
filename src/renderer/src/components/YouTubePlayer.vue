@@ -84,7 +84,7 @@ function loadYouTubeIframeAPI() {
 onMounted(async () => {
   await loadYouTubeIframeAPI()
 
-  const player = new (window as any).YT.Player('yt-player-container', {
+  new (window as any).YT.Player('yt-player-container', {
     height: '1', // Taille minimale
     width: '1', // Taille minimale
     videoId: playerStore.currentTrack?.id ?? '',

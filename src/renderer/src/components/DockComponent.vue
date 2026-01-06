@@ -64,8 +64,8 @@
       <div class="music-controls">
         <Dock :model="controlButtons" style="background: none; border: none">
           <template #item="{ item }">
-            <button @click="item.command" class="control-button" :title="item.label">
-              <i :class="item.icon" style="font-size: 1.5rem"></i>
+            <button @click="(item as any).command" class="control-button" :title="(item as any).label">
+              <i :class="(item as any).icon" style="font-size: 1.5rem"></i>
             </button>
           </template>
         </Dock>
@@ -117,13 +117,13 @@ watch(
   }
 )
 
-function handleSeek(val: number | number[]) {
+function handleSeek(val: number | number[]): void {
   // PrimeVue might return event or value
   const seekTime = typeof val === 'number' ? val : currentTime.value
   playerStore.seekTo(seekTime)
 }
 
-function formatTime(seconds: number) {
+function formatTime(seconds: number): string {
   if (!seconds || isNaN(seconds)) return '0:00'
   const m = Math.floor(seconds / 60)
   const s = Math.floor(seconds % 60)
@@ -140,7 +140,7 @@ const isLiked = computed(() => {
   return playlistStore.favorites.some((t) => t.id === playerStore.currentTrack?.id)
 })
 
-const handleSpacebar = (event: KeyboardEvent) => {
+const handleSpacebar = (event: KeyboardEvent): void => {
   if (event.code === 'Space' && (event.target as HTMLElement).tagName !== 'INPUT') {
     event.preventDefault()
     if (playerStore.isPlaying) playerStore.pause()

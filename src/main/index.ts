@@ -83,7 +83,7 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   // IPC pour la recherche AVEC support de la pagination et type (Video/Playlist)
-  ipcMain.handle('search-youtube', async (event, { query, type = 'Video' }) => {
+  ipcMain.handle('search-youtube', async (_event, { query, type = 'Video' }) => {
     try {
       // Note: yt-search ne supporte pas la pagination de la même manière que ytsr
       // On fait une recherche simple pour l'instant
@@ -121,20 +121,20 @@ app.whenReady().then(() => {
     }
   })
 
-  ipcMain.handle('store-get', (event, key) => {
+  ipcMain.handle('store-get', (_event, key) => {
     return store.get(key)
   })
 
-  ipcMain.handle('store-set', (event, key, value) => {
+  ipcMain.handle('store-set', (_event, key, value) => {
     store.set(key, value)
   })
 
-  ipcMain.handle('store-delete', (event, key) => {
+  ipcMain.handle('store-delete', (_event, key) => {
     store.delete(key)
   })
 
   // IPC pour récupérer le contenu d'une playlist
-  ipcMain.handle('get-playlist', async (event, playlistId) => {
+  ipcMain.handle('get-playlist', async (_event, playlistId) => {
     try {
       const playlist = await ytpl(playlistId, { limit: 100 })
       return {
