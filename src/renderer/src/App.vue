@@ -1,27 +1,31 @@
 <template>
-  <div class="app-layout dark-mode w-full">
+  <div class="h-screen w-screen flex flex-col bg-[#121212] text-white">
     <MenuBar />
-    <!-- Menu sidebar -->
-    <div class="menuBouton">
-      <!-- Votre contenu existant -->
-    </div>
-    <Sidebar />
-    <main class="main-content">
-      <!-- Le player caché existe toujours en fond -->
 
-      <!-- Ici s'affichera le contenu de la page actuelle (SearchView, etc.) -->
-      <router-view />
-    </main>
+    <!-- Conteneur global (Sidebar + Main) -->
+    <!-- Note: Sidebar est un Drawer (overlay), donc main prend tout l'espace -->
+
+    <div class="flex-1 relative overflow-hidden flex flex-col">
+      <Sidebar />
+
+      <main class="flex-1 overflow-hidden relative pb-[90px]">
+        <!-- Ici s'affichera le contenu de la page actuelle -->
+        <router-view />
+      </main>
+      
+      <!-- Lecteur Audio Global -->
+      <DockComponent />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import Sidebar from './components/Sidebar.vue'
 import MenuBar from './components/MenuBar.vue'
-import { useSidebarStore } from '@stores/sidebar'
+import DockComponent from './components/DockComponent.vue'
 import { usePlaylistStore } from '@stores/usePlaylistStore'
 
-const sidebarStore = useSidebarStore()
+// const sidebarStore = useSidebarStore()
 const playlistStore = usePlaylistStore()
 
 playlistStore.loadPlaylists()

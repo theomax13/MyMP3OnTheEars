@@ -22,6 +22,11 @@ const routes = [
     path: '/discover',
     name: 'discover',
     component: DiscoverView
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: () => import('@renderer/views/SettingsView.vue')
   }
 ]
 

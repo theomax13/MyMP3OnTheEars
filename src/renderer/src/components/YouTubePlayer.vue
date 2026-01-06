@@ -134,12 +134,14 @@ onMounted(async () => {
         }
 
         // Cas spécifiques numériques (backward compatibility)
-        if (event.data === 1) { // PLAYING
-           isSwitchingTrack.value = false
-           playerStore.setIsPlaying(true)
+        if (event.data === 1) {
+          // PLAYING
+          isSwitchingTrack.value = false
+          playerStore.setIsPlaying(true)
         }
-        if (event.data === 2 && !isSwitchingTrack.value) { // PAUSED
-           playerStore.setIsPlaying(false)
+        if (event.data === 2 && !isSwitchingTrack.value) {
+          // PAUSED
+          playerStore.setIsPlaying(false)
         }
       },
       onError: (event: any) => {

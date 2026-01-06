@@ -85,9 +85,3 @@ Ce projet vise à créer une application de bureau multiplateforme qui émule l'
 - [x] Implémenter le système de suggestions rapides (cartes cliquables : "Top Hits", "Nouveautés", etc.).
 - [x] Gérer l'affichage des résultats sous forme de grille avec scroll infini.
 - [x] Permettre la lecture directe d'une playlist : récupération des titres et lancement dans le player via `playerStore.playContext`.
-
-### Epic 6 : ???
-- [ ] 
-
-
-

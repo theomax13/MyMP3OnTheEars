@@ -22,23 +22,22 @@
     </div>
 
     <!-- 1. GAUCHE : Infos Track & Like -->
-    <div class="flex items-center gap-4 w-1/3">
-      <div v-if="playerStore.currentTrack" class="flex items-center gap-3">
+    <div class="flex-1 min-w-0 flex items-center gap-4">
+      <div v-if="playerStore.currentTrack" class="flex items-center gap-3 w-full">
         <img
           :src="playerStore.currentTrack.thumbnail"
-          class="w-14 h-14 rounded-full shadow-lg object-cover transition-transform duration-[10s] ease-linear"
+          class="w-14 h-14 rounded-full shadow-lg object-cover transition-transform duration-[10s] ease-linear shrink-0"
           :class="{ 'rotate-animation': playerStore.isPlaying }"
         />
 
-        <div class="flex flex-col justify-center overflow-hidden">
-          <span class="text-white font-bold text-sm truncate max-w-[150px]">
+        <div class="flex flex-col justify-center overflow-hidden min-w-0">
+          <span class="text-white font-bold text-sm truncate">
             {{ playerStore.currentTrack.title }}
           </span>
-          <span class="text-gray-400 text-xs truncate max-w-[150px]">
+          <span class="text-gray-400 text-xs truncate">
             {{ playerStore.currentTrack.channel }}
           </span>
-          <!-- Time info (Optional: show time below artist) -->
-          <span class="text-[10px] text-gray-500 font-mono">
+          <span class="text-[10px] text-gray-500 font-mono hidden md:inline">
             {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
           </span>
         </div>
@@ -50,18 +49,18 @@
               duration: String(playerStore.currentTrack.duration)
             })
           "
-          class="ml-2 text-gray-400 hover:text-green-500 transition-colors"
+          class="ml-2 text-gray-400 hover:text-green-500 transition-colors shrink-0"
           :class="{ 'text-green-500': isLiked }"
         >
           <i :class="isLiked ? 'pi pi-heart-fill' : 'pi pi-heart'" style="font-size: 1rem"></i>
         </button>
       </div>
 
-      <div v-else class="text-gray-500 text-sm italic ml-4">Prêt à jouer 🎵</div>
+      <div v-else class="text-gray-500 text-sm italic ml-4 truncate">Prêt à jouer 🎵</div>
     </div>
 
     <!-- 2. CENTRE : Contrôles Dock -->
-    <div class="w-1/3 flex justify-center">
+    <div class="flex-1 flex justify-center min-w-0">
       <div class="music-controls">
         <Dock :model="controlButtons" style="background: none; border: none">
           <template #item="{ item }">
@@ -73,10 +72,9 @@
       </div>
     </div>
 
-    <!-- 3. DROITE : Volume -->
-    <div class="w-1/3 flex items-center justify-end pr-6 gap-3">
+    <div class="flex-1 flex items-center justify-end pr-6 gap-3 min-w-[150px] slider-container">
       <i class="pi pi-volume-up text-gray-400"></i>
-      <div class="w-32">
+      <div class="w-full max-w-[150px] min-w-[80px]">
         <Slider v-model="volume" :min="0" :max="100" class="w-full" />
       </div>
     </div>
@@ -249,6 +247,14 @@ function parseDuration(durationStr: string | number): number {
 }
 :deep(.p-slider-range) {
   background-color: #10b981;
+}
+
+/* Ensure no drag on interactive elements */
+.slider-container,
+.control-button,
+.music-controls,
+.p-slider {
+  -webkit-app-region: no-drag;
 }
 
 /* Custom Top Slider (Invisible by default, handle on hover) */

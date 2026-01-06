@@ -1,7 +1,7 @@
 <template>
   <div class="card flex justify-content-center">
     <Drawer v-model:visible="sidebarStore.isVisible" style="border-style: none">
-      <template #container="{ closeCallback }">
+      <template #container>
         <div class="flex flex-col h-full bg-[#1e293b]">
           <!-- EN-TÊTE -->
           <div class="flex items-center justify-between px-6 pt-4 shrink-0">
@@ -17,28 +17,28 @@
               <li>
                 <ul class="list-none overflow-hidden">
                   <li>
-                    <router-link to="/search" v-ripple class="menu-item p-ripple rounded-full">
+                    <router-link v-ripple to="/search" class="menu-item p-ripple rounded-full">
                       <i class="pi pi-home mr-2"></i>
                       <span class="font-medium">Accueil</span>
                     </router-link>
                   </li>
                   <li>
-                    <router-link to="/playlist" v-ripple class="menu-item p-ripple rounded-full">
+                    <router-link v-ripple to="/playlist" class="menu-item p-ripple rounded-full">
                       <i class="pi pi-list mr-2"></i>
                       <span class="font-medium">Playlist</span>
                     </router-link>
                   </li>
                   <li>
-                    <router-link to="/discover" v-ripple class="menu-item p-ripple rounded-full">
+                    <router-link v-ripple to="/discover" class="menu-item p-ripple rounded-full">
                       <i class="pi pi-lightbulb mr-2"></i>
                       <span class="font-medium">Découvrir</span>
                     </router-link>
                   </li>
                   <li>
-                    <a v-ripple class="menu-item p-ripple rounded-full">
+                    <router-link v-ripple to="/settings" class="menu-item p-ripple rounded-full">
                       <i class="pi pi-cog mr-2"></i>
                       <span class="font-medium">Paramètres</span>
-                    </a>
+                    </router-link>
                   </li>
                 </ul>
               </li>
